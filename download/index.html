@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hexion Download</title>
+  <title>Project hexion</title>
   <style>
     :root {
       --bg: #0e1d33;
       --bg-deep: #111f36;
       --fg: #f4f8ff;
       --accent: #77bcfb;
+      --accent-2: #66adf2;
+      --accent-3: #22c55e;
       --muted: #7190bc;
+      --panel: #0c192b;
       --glass: #152239;
       --glass-border: #1f3350;
     }
@@ -18,6 +21,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
+      position: relative;
       min-height: 100vh;
       min-height: 100dvh;
       background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
@@ -28,32 +32,68 @@
       justify-content: center;
       padding: 16px;
       overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
+    /* ---------- Animated background ---------- */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Fine dot field that drifts slowly, with a dark vignette at the edges */
+    .bg .grid {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(119, 188, 251, 0.14) 1px, transparent 1.2px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
+      animation: gridMove 12s linear infinite;
+    }
+
+    .bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(8, 18, 32, 0.7) 100%);
+    }
+
+    /* ---------- Content card ---------- */
     main {
+      position: relative;
+      z-index: 1;
       text-align: center;
-      max-width: 560px;
+      padding: clamp(32px, 6vw, 60px) clamp(20px, 6vw, 64px);
+      max-width: 640px;
       width: 100%;
-      padding: clamp(32px, 6vw, 56px) clamp(20px, 6vw, 56px);
       background: var(--glass);
       border: 1px solid var(--glass-border);
       border-radius: 24px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 40px rgba(0, 0, 0, 0.5);
+      animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
     h1 {
-      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-size: clamp(2.2rem, 8vw, 4.5rem);
       font-weight: 800;
       letter-spacing: -0.02em;
-      line-height: 1.15;
+      line-height: 1.05;
+      color: var(--fg);
+      animation: fadeIn 0.8s ease-out both;
     }
 
     p {
-      margin-top: 14px;
+      margin-top: 12px;
       color: var(--muted);
+      font-size: 1rem;
     }
 
-    /* Blue 3D button, styled like the Download Hexion button */
+    /* ---------- Blue 3D back button ---------- */
     .back-btn {
       position: relative;
       display: inline-block;
@@ -106,17 +146,37 @@
       outline-offset: 6px;
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to   { background-position: 28px 28px; }
+    }
+
     @media (max-width: 480px) {
       .back-btn { padding: 16px 30px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
+      h1, main, .bg .grid { animation: none; }
       .back-btn, .back-btn::before { transition: none; }
       .back-btn:hover { transform: none; }
     }
   </style>
 </head>
 <body>
+  <div class="bg" aria-hidden="true">
+    <div class="grid"></div>
+  </div>
+
   <main>
     <h1>Hexion is Current Unavailable</h1>
     <p>Please check back later.</p>
