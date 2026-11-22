@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project hexion</title>
+  <title>Project Hexion</title>
   <style>
     :root {
       --bg: #070910;
@@ -82,8 +82,36 @@
         linear-gradient(#0e1019, #0e1019) padding-box,
         conic-gradient(from var(--border-angle), #22c55e, #00d4ff, #7c5cff, #22c55e) border-box;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-      animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+      /* Real 3D slab: tilts and lifts toward the cursor (set by JS) */
+      --cry: 0deg;
+      --crx: 0deg;
+      --clift: 0px;
+      transform-style: preserve-3d;
+      transform: translate3d(0, 0, var(--clift)) rotateX(var(--crx)) rotateY(var(--cry));
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) backwards,
                  borderSpin 6s linear infinite;
+    }
+
+    main:hover {
+      transition: transform 0.12s ease-out;
+    }
+
+    /* Stacked layers form the card's thickness behind its front face */
+    .card-layer {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: #07080d;
+      border: 2px solid #0a0c12;
+      transform: translateZ(var(--z));
+      pointer-events: none;
+    }
+
+    .card-stage {
+      perspective: 1400px;
+      width: 100%;
+      max-width: 640px;
     }
 
     .big-h {
@@ -282,6 +310,7 @@
     @media (prefers-reduced-motion: reduce) {
       h1, .download-btn, main, .orb, .bg .grid { animation: none; }
       .download-btn { transition: none; transform: none; }
+      main { transition: none; transform: none; }
     }
   </style>
 </head>
@@ -290,8 +319,9 @@
     <div class="grid"></div>
   </div>
 
+  <div class="card-stage">
   <main>
-    <h1>Project <span class="big-h">h</span>exion</h1>
+    <h1>Project <span class="big-h">H</span>exion</h1>
     <div class="download-wrap">
       <a id="download-btn" class="download-btn" href="hexion.zip" download>
         <span class="face">
@@ -301,6 +331,7 @@
       </a>
     </div>
   </main>
+  </div>
 
   <script>
     (function () {
@@ -354,6 +385,37 @@
         btn.style.setProperty('--mx', '50%');
         btn.style.setProperty('--my', '50%');
       });
+
+      // Card: 3D slab with thickness that tilts and lifts toward the cursor.
+      var card = document.querySelector('main');
+      if (card) {
+        var CARD_LAYERS = 20;
+        var CARD_DEPTH = 26;
+        var cardFrag = document.createDocumentFragment();
+        for (var j = 0; j < CARD_LAYERS; j++) {
+          var cl = document.createElement('span');
+          cl.className = 'card-layer';
+          cl.setAttribute('aria-hidden', 'true');
+          cl.style.setProperty('--z', (-0.5 - (j / (CARD_LAYERS - 1)) * (CARD_DEPTH - 0.5)).toFixed(2) + 'px');
+          cardFrag.appendChild(cl);
+        }
+        card.insertBefore(cardFrag, card.firstChild);
+
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          var px = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+          var py = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+          card.style.setProperty('--cry', ((px - 0.5) * 14).toFixed(2) + 'deg');
+          card.style.setProperty('--crx', ((0.5 - py) * 14).toFixed(2) + 'deg');
+          card.style.setProperty('--clift', '28px');
+        });
+
+        card.addEventListener('mouseleave', function () {
+          card.style.setProperty('--cry', '0deg');
+          card.style.setProperty('--crx', '0deg');
+          card.style.setProperty('--clift', '0px');
+        });
+      }
     })();
   </script>
 </body>
