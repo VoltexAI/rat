@@ -168,6 +168,14 @@
       will-change: transform;
     }
 
+    /* Invisible hit area: extends the hover zone 32px beyond the button */
+    .download-btn::before {
+      content: "";
+      position: absolute;
+      inset: -32px;
+      border-radius: 40px;
+    }
+
     /* Tight, responsive follow while the mouse is over the button */
     .download-btn:hover {
       transition: transform 0.12s ease-out, box-shadow 0.25s ease;
@@ -310,8 +318,10 @@
       if (btn && !reduce) {
         btn.addEventListener('mousemove', function (e) {
           var r = btn.getBoundingClientRect();
-          var px = (e.clientX - r.left) / r.width;    // 0 .. 1
-          var py = (e.clientY - r.top) / r.height;    // 0 .. 1
+          // Clamp to the button's edges so the hit area's outer margin
+          // doesn't tilt the button further than its own edge.
+          var px = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+          var py = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
           var x = px - 0.5;                           // -0.5 .. 0.5
           var y = py - 0.5;
 
