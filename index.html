@@ -248,19 +248,19 @@
       pointer-events: auto;
     }
 
-    .rat-overlay .rat {
+    .rat {
       position: absolute;
       left: 0;
       top: 50%;
-      width: 240px;
-      height: 180px;
-      margin-top: -90px;
+      width: 320px;
+      height: 220px;
+      margin-top: -110px;
       transform-style: preserve-3d;
-      transform: translateX(-320px);
+      transform: translateX(-340px);
     }
 
     .rat-overlay.active .rat {
-      animation: ratWalk 2.4s linear forwards;
+      animation: ratWalk 2.6s linear forwards;
     }
 
     .rat-inner {
@@ -273,195 +273,308 @@
       animation: bob 0.4s ease-in-out infinite alternate;
     }
 
-    .rat .body {
+    .rat div {
       position: absolute;
-      left: 40px; top: 50px;
-      width: 150px; height: 72px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 28%, #d3d8e0, #6a707d 48%, #3f4450 88%);
-      box-shadow: inset -10px -12px 20px rgba(0, 0, 0, 0.45),
-                  inset 6px 6px 12px rgba(255, 255, 255, 0.12);
     }
 
-    /* Fur texture over the body */
+    /* Body */
+    .rat .body {
+      left: 70px; top: 62px;
+      width: 160px; height: 94px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 40% 25%, #dfe3ea 0%, #8a909c 42%, #4b505c 86%);
+      box-shadow: inset -14px -16px 26px rgba(0, 0, 0, 0.45),
+                  inset 8px 8px 14px rgba(255, 255, 255, 0.12);
+    }
+
     .rat .body::before {
       content: "";
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 7px);
-    }
-
-    .rat .belly {
-      position: absolute;
-      left: 22px; top: 40px;
-      width: 110px; height: 26px;
-      border-radius: 50%;
-      background: linear-gradient(#eef1f6, #b9bfca);
-      opacity: 0.6;
+      background:
+        repeating-linear-gradient(112deg, rgba(255, 255, 255, 0.09) 0 1.5px, transparent 1.5px 6px),
+        repeating-linear-gradient(68deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 9px);
     }
 
     .rat .spine {
-      position: absolute;
-      left: 16px; top: 8px;
-      width: 118px; height: 10px;
+      left: 20px; top: 10px;
+      width: 130px; height: 12px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.24);
       filter: blur(2px);
     }
 
-    .rat .ear-back {
-      left: 176px; top: 6px;
-      background: #7d8390;
-      transform: translateZ(4px);
-    }
-
-    .rat .inner-ear {
-      position: absolute;
-      left: 6px; top: 6px;
-      width: 18px; height: 18px;
+    .rat .belly {
+      left: 40px; top: 56px;
+      width: 100px; height: 26px;
       border-radius: 50%;
-      background: #f6c9d3;
+      background: linear-gradient(#f0f2f6, #aab0bb);
+      opacity: 0.65;
     }
 
-    .rat .whisker {
-      position: absolute;
-      left: 246px;
-      width: 52px; height: 1.5px;
-      background: rgba(230, 236, 246, 0.75);
-      transform-origin: 0 50%;
-      transform: translateZ(26px);
+    .rat .haunch {
+      left: 14px; top: 22px;
+      width: 76px; height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 60% 40%, #6d7480, #343843 70%);
+      box-shadow: inset -6px -6px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.15);
     }
 
-    .rat .w1 { top: 50px; transform: translateZ(26px) rotate(-14deg); }
-    .rat .w2 { top: 55px; transform: translateZ(26px) rotate(-2deg); }
-    .rat .w3 { top: 60px; transform: translateZ(26px) rotate(10deg); }
-
-    .rat .paw {
-      position: absolute;
-      left: -3px; top: 40px;
-      width: 22px; height: 9px;
-      border-radius: 6px;
-      background: #8a909c;
-      box-shadow: inset -6px 0 0 rgba(0, 0, 0, 0.2);
+    .rat .shoulder {
+      left: 104px; top: 18px;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.25), transparent 65%);
     }
 
+    /* Tail: nested segments so each one bends from the one before it */
+    .rat .tail {
+      left: 62px; top: 118px;
+      width: 18px; height: 7px;
+      border-radius: 4px;
+      background: repeating-linear-gradient(90deg, #c98ea0 0 7px, #9d6a79 7px 10px);
+      transform-origin: 100% 50%;
+      transform: rotate(-22deg) translateZ(-8px);
+    }
+
+    .rat .seg {
+      left: -15px; top: 0;
+      height: 7px;
+      border-radius: 4px;
+      background: repeating-linear-gradient(90deg, #c98ea0 0 7px, #9d6a79 7px 10px);
+      transform-origin: 100% 50%;
+    }
+
+    .rat .s1 { width: 16px; }
+    .rat .s2 { width: 14px; }
+    .rat .s3 { width: 12px; }
+    .rat .s4 { width: 10px; }
+    .rat .s5 { width: 8px; }
+    .rat .s6 { width: 6px; }
+
+    .rat-overlay.active .tail,
+    .rat-overlay.active .seg {
+      animation: tailWave 0.45s ease-in-out infinite alternate;
+    }
+
+    .rat-overlay.active .s1 { animation-delay: -0.08s; }
+    .rat-overlay.active .s2 { animation-delay: -0.16s; }
+    .rat-overlay.active .s3 { animation-delay: -0.24s; }
+    .rat-overlay.active .s4 { animation-delay: -0.32s; }
+    .rat-overlay.active .s5 { animation-delay: -0.40s; }
+    .rat-overlay.active .s6 { animation-delay: -0.48s; }
+
+    /* Head */
     .rat .head {
-      position: absolute;
-      left: 168px; top: 26px;
-      width: 66px; height: 58px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #d2d6dd, #646a77 75%);
+      left: 196px; top: 34px;
+      width: 84px; height: 76px;
+      border-radius: 50% 50% 46% 46%;
+      background: radial-gradient(circle at 36% 30%, #e2e5ec, #6c7280 68%, #3f4450 100%);
+      box-shadow: inset -8px -8px 16px rgba(0, 0, 0, 0.4);
       transform: translateZ(14px);
     }
 
-    .rat .ear {
+    .rat .head::before {
+      content: "";
       position: absolute;
-      left: 188px; top: 10px;
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      background: #e9a6b5;
-      transform: translateZ(10px);
+      inset: 0;
+      border-radius: inherit;
+      background: repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.07) 0 1.5px, transparent 1.5px 6px);
     }
 
-    .rat .snout {
-      position: absolute;
-      left: 206px; top: 48px;
-      width: 42px; height: 24px;
+    .rat .cheek {
+      left: 40px; top: 38px;
+      width: 40px; height: 30px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, #f2f4f8, #b8bec9);
+      opacity: 0.6;
+    }
+
+    .rat .brow {
+      left: 36px; top: 16px;
+      width: 38px; height: 6px;
+      border-radius: 3px;
+      background: #2f333c;
+      transform: rotate(-8deg);
+      opacity: 0.6;
+    }
+
+    /* Ears */
+    .rat .ear-back {
+      left: 220px; top: 14px;
+      width: 36px; height: 36px;
       border-radius: 50%;
       background: #7d8390;
+      transform: translateZ(6px);
+    }
+
+    .rat .ear {
+      left: 236px; top: 18px;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #e8a3b3;
+      box-shadow: inset -3px -3px 6px rgba(0, 0, 0, 0.15);
+      transform: translateZ(12px);
+    }
+
+    .rat .inner-ear {
+      left: 6px; top: 6px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, #fbd3dc, #d98aa0);
+    }
+
+    /* Snout, nose, teeth */
+    .rat .snout {
+      left: 252px; top: 70px;
+      width: 60px; height: 30px;
+      border-radius: 50% 30% 30% 50% / 50% 40% 40% 50%;
+      background: linear-gradient(#a5abb7, #6c7280);
+      box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.2);
       transform: translateZ(18px);
     }
 
     .rat .nose {
-      position: absolute;
-      left: 238px; top: 50px;
-      width: 10px; height: 10px;
+      left: 300px; top: 72px;
+      width: 13px; height: 12px;
       border-radius: 50%;
-      background: #f08aa0;
-      transform: translateZ(24px);
-    }
-
-    .rat .eye {
-      position: absolute;
-      left: 206px; top: 36px;
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, #2a2f3a, #05060a);
-      box-shadow: 0 0 0 2px #ffffff;
-      transform: translateZ(22px);
-    }
-
-    .rat .eye::after {
-      content: "";
-      position: absolute;
-      left: 2px; top: 2px;
-      width: 3px; height: 3px;
-      border-radius: 50%;
-      background: #ffffff;
+      background: radial-gradient(circle at 35% 35%, #ffb3c6, #c24d6e);
+      transform: translateZ(26px);
     }
 
     .rat .nose::after {
       content: "";
       position: absolute;
-      left: 2px; top: 2px;
-      width: 3px; height: 3px;
+      left: 3px; top: 2px;
+      width: 4px; height: 3px;
       border-radius: 50%;
-      background: #ffe0e8;
+      background: rgba(255, 255, 255, 0.8);
     }
 
-    .rat .tail {
+    .rat .tooth {
+      left: 284px; top: 96px;
+      width: 9px; height: 14px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(#fff6c8, #e0cf7e);
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+      transform: translateZ(20px);
+    }
+
+    /* Eye with highlight and blink lid */
+    .rat .eye {
+      left: 242px; top: 54px;
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #3a2f2f, #0a0708 70%);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+      transform: translateZ(22px);
+      overflow: hidden;
+    }
+
+    .rat .eye::after {
+      content: "";
       position: absolute;
-      left: 0; top: 86px;
-      width: 80px; height: 5px;
-      border-radius: 4px;
-      background: repeating-linear-gradient(90deg, #c98ea0 0 9px, #9d6a79 9px 12px);
-      transform-origin: 100% 50%;
-      transform: rotate(-20deg) translateZ(-4px);
+      left: 3px; top: 3px;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #ffffff;
     }
 
-    .rat-overlay.active .tail {
-      animation: tailWag 0.3s ease-in-out infinite alternate;
+    .rat .lid {
+      left: 0; top: 0;
+      width: 13px; height: 13px;
+      background: linear-gradient(#5b6170, #343a46);
+      transform-origin: 50% 0;
+      transform: scaleY(0);
     }
 
+    .rat-overlay.active .lid {
+      animation: blink 3.2s infinite;
+    }
+
+    /* Whiskers */
+    .rat .whisker {
+      left: 300px;
+      width: 56px; height: 1.4px;
+      background: rgba(235, 240, 250, 0.8);
+      transform-origin: 0 50%;
+    }
+
+    .rat .w1 { top: 72px; transform: translateZ(28px) rotate(-16deg); }
+    .rat .w2 { top: 76px; transform: translateZ(28px) rotate(-4deg); }
+    .rat .w3 { top: 80px; transform: translateZ(28px) rotate(8deg); }
+    .rat .w4 { top: 84px; transform: translateZ(28px) rotate(18deg); }
+
+    /* Legs: thigh (.leg) with a shin (.shin) and paw; far legs sit behind */
     .rat .leg {
-      position: absolute;
-      top: 112px;
-      width: 14px; height: 46px;
-      border-radius: 7px;
-      background: linear-gradient(90deg, #5b6170, #353a45);
+      top: 136px;
+      width: 18px; height: 40px;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #666d7b, #3a404c);
       transform-origin: 50% 0;
     }
 
-    .rat .l1 { left: 60px; }
-    .rat .l2 { left: 84px; }
-    .rat .l3 { left: 150px; }
-    .rat .l4 { left: 172px; }
+    .rat .shin {
+      left: 1px; top: 34px;
+      width: 16px; height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #5d6472, #343945);
+      transform-origin: 50% 0;
+    }
 
-    .rat-overlay.active .l1,
-    .rat-overlay.active .l4 {
+    .rat .paw {
+      left: -3px; top: 32px;
+      width: 24px; height: 10px;
+      border-radius: 6px;
+      background: #8a909c;
+      box-shadow: inset -8px 0 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .rat .paw::after {
+      content: "";
+      position: absolute;
+      left: 20px; top: 2px;
+      width: 4px; height: 3px;
+      border-radius: 2px;
+      background: #e9e4d6;
+    }
+
+    .rat .l1 { left: 100px; }
+    .rat .l2 { left: 200px; }
+    .rat .l3 { left: 112px; transform: translateZ(-10px); background: linear-gradient(90deg, #4c5260, #2a2f3a); }
+    .rat .l4 { left: 212px; transform: translateZ(-10px); background: linear-gradient(90deg, #4c5260, #2a2f3a); }
+
+    .rat-overlay.active .leg {
       animation: legSwing 0.4s ease-in-out infinite alternate;
     }
 
+    .rat-overlay.active .shin {
+      animation: shinSwing 0.4s ease-in-out infinite alternate;
+    }
+
     .rat-overlay.active .l2,
-    .rat-overlay.active .l3 {
-      animation: legSwing 0.4s ease-in-out infinite alternate;
+    .rat-overlay.active .l4 {
+      animation-delay: -0.4s;
+    }
+
+    .rat-overlay.active .l2 .shin,
+    .rat-overlay.active .l4 .shin {
       animation-delay: -0.4s;
     }
 
     .rat .rat-shadow {
-      position: absolute;
-      left: 40px; top: 160px;
-      width: 170px; height: 16px;
+      left: 60px; top: 200px;
+      width: 210px; height: 16px;
       border-radius: 50%;
       background: rgba(0, 0, 0, 0.55);
       filter: blur(5px);
-      transform: translateZ(-10px);
+      transform: translateZ(-12px);
     }
 
     @keyframes ratWalk {
-      from { transform: translateX(-320px) rotateY(18deg); }
-      to   { transform: translateX(calc(100vw + 320px)) rotateY(-18deg); }
+      from { transform: translateX(-340px) rotateY(16deg); }
+      to   { transform: translateX(calc(100vw + 340px)) rotateY(-16deg); }
     }
 
     @keyframes bob {
@@ -474,9 +587,19 @@
       to   { transform: rotate(24deg); }
     }
 
-    @keyframes tailWag {
-      from { transform: rotate(-30deg) translateZ(-4px); }
-      to   { transform: rotate(-12deg) translateZ(-4px); }
+    @keyframes shinSwing {
+      from { transform: rotate(14deg); }
+      to   { transform: rotate(-18deg); }
+    }
+
+    @keyframes tailWave {
+      from { transform: rotate(-8deg); }
+      to   { transform: rotate(8deg); }
+    }
+
+    @keyframes blink {
+      0%, 94%, 100% { transform: scaleY(0); }
+      97%           { transform: scaleY(1); }
     }
 
     @keyframes popIn {
@@ -494,12 +617,6 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33%      { transform: translate(60px, -40px) scale(1.08); }
-      66%      { transform: translate(-40px, 50px) scale(0.94); }
-    }
-
     /* Moves exactly one tile (28px) diagonally so the loop is seamless */
     @keyframes gridMove {
       from { background-position: 0 0; }
@@ -511,7 +628,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      h1, .download-btn, main, .orb, .bg .grid { animation: none; }
+      h1, .download-btn, main, .bg .grid { animation: none; }
       .download-btn { transition: none; transform: none; }
     }
   </style>
@@ -536,22 +653,40 @@
   <div id="rat-overlay" class="rat-overlay" aria-hidden="true">
     <div class="rat">
       <div class="rat-inner">
-        <div class="tail"></div>
-        <div class="body"><div class="spine"></div><div class="belly"></div></div>
-        <div class="head"></div>
-        <div class="ear ear-back"></div>
+        <div class="rat-shadow"></div>
+
+        <div class="tail"><div class="seg s1"><div class="seg s2"><div class="seg s3"><div class="seg s4"><div class="seg s5"><div class="seg s6"></div></div></div></div></div></div></div>
+
+        <div class="leg l3"><div class="shin"><div class="paw"></div></div></div>
+        <div class="leg l4"><div class="shin"><div class="paw"></div></div></div>
+
+        <div class="body">
+          <div class="spine"></div>
+          <div class="belly"></div>
+          <div class="haunch"></div>
+          <div class="shoulder"></div>
+        </div>
+
+        <div class="leg l1"><div class="shin"><div class="paw"></div></div></div>
+        <div class="leg l2"><div class="shin"><div class="paw"></div></div></div>
+
+        <div class="ear-back"></div>
         <div class="ear"><div class="inner-ear"></div></div>
+
+        <div class="head">
+          <div class="cheek"></div>
+          <div class="brow"></div>
+        </div>
+
         <div class="snout"></div>
         <div class="nose"></div>
-        <div class="eye"></div>
+        <div class="tooth"></div>
+        <div class="eye"><div class="lid"></div></div>
+
         <div class="whisker w1"></div>
         <div class="whisker w2"></div>
         <div class="whisker w3"></div>
-        <div class="leg l1"><div class="paw"></div></div>
-        <div class="leg l2"><div class="paw"></div></div>
-        <div class="leg l3"><div class="paw"></div></div>
-        <div class="leg l4"><div class="paw"></div></div>
-        <div class="rat-shadow"></div>
+        <div class="whisker w4"></div>
       </div>
     </div>
   </div>
@@ -574,13 +709,12 @@
         document.getElementById('rat-overlay').classList.add('active');
         setTimeout(function () {
           window.location.href = btn.getAttribute('href');
-        }, 2600);
+        }, 2800);
       });
 
       // Build the slab's thickness: layers stacked behind the front face.
       var LAYERS = 28;
-      var depth = parseFloat(getComputedStyle(document.documentElement)
-                    .getPropertyValue('--btn-depth')) || 16;
+      var depth = 34;
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < LAYERS; i++) {
         var layer = document.createElement('span');
