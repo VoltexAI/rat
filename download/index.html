@@ -10,7 +10,7 @@
       --bg-deep: #111f36;
       --fg: #f4f8ff;
       --accent: #77bcfb;
-      --muted: #7190bc;
+      --muted: #9ca3af;
       --glass: #152239;
       --glass-border: #1f3350;
       --btn-depth: 34px;          /* thickness of the 3D button */
@@ -61,13 +61,13 @@
       background: radial-gradient(ellipse at center, transparent 45%, rgba(8, 18, 32, 0.7) 100%);
     }
 
-    /* ---------- Content card ---------- */
+    /* ---------- Content card (same as main page) ---------- */
     main {
       position: relative;
       z-index: 1;
       text-align: center;
-      padding: clamp(32px, 6vw, 60px) clamp(20px, 5vw, 56px);
-      max-width: 820px;
+      padding: clamp(32px, 6vw, 60px) clamp(20px, 6vw, 64px);
+      max-width: 640px;
       width: 100%;
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -77,16 +77,21 @@
     }
 
     h1 {
-      font-size: clamp(1.1rem, 4.6vw, 2.2rem);
+      font-size: clamp(2.2rem, 8vw, 4.5rem);
       font-weight: 800;
-      letter-spacing: -0.01em;
-      line-height: 1.2;
-      white-space: nowrap;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
       color: var(--fg);
       animation: fadeIn 0.8s ease-out both;
     }
 
-    /* ---------- Blue 3D back button (same build as Download Hexion) ---------- */
+    p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* ---------- Blue 3D back button (same size and build as Download Hexion) ---------- */
     .back-wrap {
       margin-top: 40px;
       display: inline-block;
@@ -105,8 +110,8 @@
 
       position: relative;
       display: inline-block;
-      padding: 26px 56px;
-      font-size: clamp(1.1rem, 3.6vw, 1.5rem);
+      padding: 44px 110px;
+      font-size: clamp(1.4rem, 4.5vw, 2.1rem);
       font-weight: 700;
       letter-spacing: 0.02em;
       color: #ffffff;
@@ -244,7 +249,7 @@
     }
 
     @media (max-width: 480px) {
-      .back-btn { padding: 20px 34px; }
+      .back-btn { padding: 32px 64px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -259,7 +264,8 @@
   </div>
 
   <main>
-    <h1>Hexion is Currently Unavailable</h1>
+    <h1>Hexion</h1>
+    <p>Currently Unavailable</p>
     <div class="back-wrap">
       <a id="back-btn" class="back-btn" href="https://www.bighexion.pro/" draggable="false">
         <span class="face">
