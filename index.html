@@ -89,7 +89,7 @@
       position: relative;
       text-align: center;
       padding: 60px 64px;
-      max-width: 600px;
+      max-width: 540px;
       width: 100%;
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -166,7 +166,8 @@
     /* Front face: the part you see and click */
     .download-btn .face {
       position: relative;
-      padding: 44px 110px;
+      width: 400px;
+      padding: 36px 52px;
       border-radius: inherit;
       display: flex;
       align-items: center;
@@ -328,21 +329,18 @@
       }
       fit();
       window.addEventListener('resize', fit);
-      // Shrink the label font so the text fits inside the button
+      // Scale the label font so the text fills the button's width (up or down)
       function fitLabels() {
         document.querySelectorAll('.stage .label').forEach(function (label) {
           var face = label.parentElement;
-          var card = label.closest('main');
           label.style.fontSize = '';
-          var cardCS = getComputedStyle(card);
           var faceCS = getComputedStyle(face);
-          var avail = card.clientWidth
-            - parseFloat(cardCS.paddingLeft) - parseFloat(cardCS.paddingRight)
+          var avail = face.clientWidth
             - parseFloat(faceCS.paddingLeft) - parseFloat(faceCS.paddingRight);
           var base = parseFloat(getComputedStyle(label).fontSize);
           var w = label.offsetWidth;
-          if (avail > 0 && w > avail) {
-            label.style.fontSize = (base * avail / w * 0.97).toFixed(2) + 'px';
+          if (avail > 0 && w > 0) {
+            label.style.fontSize = (base * avail / w * 0.96).toFixed(2) + 'px';
           }
         });
       }
