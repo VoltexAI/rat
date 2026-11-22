@@ -53,23 +53,74 @@
       color: var(--muted);
     }
 
-    a.back {
+    /* Blue 3D button, styled like the Download Hexion button */
+    .back-btn {
+      position: relative;
       display: inline-block;
-      margin-top: 28px;
-      color: var(--accent);
+      margin-top: 36px;
+      padding: 18px 42px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #ffffff;
       text-decoration: none;
-      font-weight: 600;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #8ec5fb, #3d8fe0 60%, #2f74c4);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                  0 8px 0 #1d5ea6,
+                  0 14px 26px rgba(61, 143, 224, 0.35);
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
     }
 
-    a.back:hover { text-decoration: underline; }
-    a.back:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+    .back-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.7s ease;
+      pointer-events: none;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                  0 11px 0 #1d5ea6,
+                  0 18px 30px rgba(61, 143, 224, 0.5);
+    }
+
+    .back-btn:hover::before { left: 130%; }
+
+    .back-btn:active {
+      transform: translateY(5px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                  0 2px 0 #1d5ea6;
+    }
+
+    .back-btn:focus-visible {
+      outline: 3px solid #bfdcff;
+      outline-offset: 6px;
+    }
+
+    @media (max-width: 480px) {
+      .back-btn { padding: 16px 30px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .back-btn, .back-btn::before { transition: none; }
+      .back-btn:hover { transform: none; }
+    }
   </style>
 </head>
 <body>
   <main>
     <h1>Hexion is Current Unavailable</h1>
     <p>Please check back later.</p>
-    <a class="back" href="/">&larr; Back to Project Hexion</a>
+    <a class="back-btn" href="https://www.bighexion.pro/">&larr; Back to Project Hexion</a>
   </main>
 </body>
 </html>
