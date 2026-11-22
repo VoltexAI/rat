@@ -269,6 +269,18 @@
       display: block;
     }
 
+    /* Touch screens have no hover: gently sway the 3D button so its depth shows */
+    @media (hover: none) {
+      .download-wrap {
+        animation: idleSway 4s ease-in-out infinite;
+      }
+    }
+
+    @keyframes idleSway {
+      0%, 100% { transform: rotateX(10deg) rotateY(-18deg); }
+      50%      { transform: rotateX(-6deg) rotateY(18deg); }
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -385,12 +397,12 @@
 
       // 3D hover: the slab lifts toward the viewer, tilts toward the cursor,
       // sinks slightly, and its highlight follows the pointer.
-      btn.addEventListener('mousemove', function (e) {
+      function tilt(clientX, clientY) {
         var r = btn.getBoundingClientRect();
         // Clamp to the button's edges so the hit area's margin
         // doesn't tilt the button further than its own edge.
-        var px = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-        var py = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+        var px = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+        var py = Math.min(1, Math.max(0, (clientY - r.top) / r.height));
         var x = px - 0.5;
         var y = py - 0.5;
 
@@ -401,9 +413,19 @@
         btn.style.setProperty('--lift', '34px');
         btn.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
         btn.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+      }
+
+      btn.addEventListener('mousemove', function (e) {
+        tilt(e.clientX, e.clientY);
       });
 
-      btn.addEventListener('mouseleave', function () {
+      // Touch screens: dragging a finger over the button tilts it the same way
+      btn.addEventListener('touchmove', function (e) {
+        var t = e.touches[0];
+        if (t) tilt(t.clientX, t.clientY);
+      }, { passive: true });
+
+      function resetTilt() {
         btn.style.setProperty('--rx', '0deg');
         btn.style.setProperty('--ry', '0deg');
         btn.style.setProperty('--tx', '0px');
@@ -411,7 +433,9 @@
         btn.style.setProperty('--lift', '0px');
         btn.style.setProperty('--mx', '50%');
         btn.style.setProperty('--my', '50%');
-      });
+      }
+      btn.addEventListener('mouseleave', resetTilt);
+      btn.addEventListener('touchend', resetTilt);
     })();
   </script>
 
