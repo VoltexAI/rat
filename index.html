@@ -17,6 +17,13 @@
       --btn-depth: 34px;          /* thickness of the 3D button */
     }
 
+    /* Lets the card's border gradient rotate smoothly */
+    @property --border-angle {
+      syntax: "<angle>";
+      inherits: false;
+      initial-value: 0deg;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -68,11 +75,22 @@
       padding: clamp(32px, 6vw, 60px) clamp(20px, 6vw, 64px);
       max-width: 640px;
       width: 100%;
-      background: #0e1019;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      /* Solid card with an animated, slowly rotating gradient border */
+      border: 2px solid transparent;
       border-radius: 24px;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 40px rgba(0, 0, 0, 0.5);
-      animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      background:
+        linear-gradient(#0e1019, #0e1019) padding-box,
+        conic-gradient(from var(--border-angle), #22c55e, #00d4ff, #7c5cff, #22c55e) border-box;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+                 borderSpin 6s linear infinite;
+    }
+
+    .big-h {
+      display: inline-block;
+      font-size: 1.5em;
+      line-height: 0.8;
+      vertical-align: -0.08em;
     }
 
     h1 {
@@ -236,6 +254,11 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes borderSpin {
+      from { --border-angle: 0deg; }
+      to   { --border-angle: 360deg; }
+    }
+
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(24px) scale(0.98); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -268,7 +291,7 @@
   </div>
 
   <main>
-    <h1>Project hexion</h1>
+    <h1>Project <span class="big-h">h</span>exion</h1>
     <div class="download-wrap">
       <a id="download-btn" class="download-btn" href="hexion.zip" download>
         <span class="face">
