@@ -275,7 +275,7 @@
   <main>
     <h1>Project Hexion</h1>
     <div class="download-wrap">
-      <a id="download-btn" class="download-btn" href="hexion.zip" download>
+      <a id="download-btn" class="download-btn" href="hexion.zip" download draggable="false">
         <span class="face">
           <span class="shine"></span>
           <span class="label">Download Hexion</span>
@@ -286,6 +286,11 @@
 
   <script>
     (function () {
+      // Block dragging of links, images and selected content
+      document.addEventListener('dragstart', function (e) {
+        e.preventDefault();
+      });
+
       var btn = document.getElementById('download-btn');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!btn) return;
