@@ -4,22 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Project hexion</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
   <style>
     :root {
       --bg: #0e1d33;
       --bg-deep: #111f36;
       --fg: #f4f8ff;
       --accent: #77bcfb;
-      --accent-2: #66adf2;
-      --accent-3: #22c55e;
       --muted: #7190bc;
-      --panel: #0c192b;
       --glass: #152239;
       --glass-border: #1f3350;
       --btn-depth: 34px;          /* thickness of the 3D button */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+    }
 
     body {
       position: relative;
@@ -28,11 +37,7 @@
       background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
       color: var(--fg);
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      overflow-x: hidden;
+      overflow: hidden;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -64,12 +69,26 @@
       background: radial-gradient(ellipse at center, transparent 45%, rgba(8, 18, 32, 0.7) 100%);
     }
 
+    /* ---------- Stage: a 1200x800 design that scales to fit the window ---------- */
+    .stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 1200px;
+      height: 800px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%) scale(var(--s, 1));
+      transform-origin: center center;
+    }
+
     /* ---------- Content card ---------- */
     main {
       position: relative;
-      z-index: 1;
       text-align: center;
-      padding: clamp(32px, 6vw, 60px) clamp(20px, 6vw, 64px);
+      padding: 60px 64px;
       max-width: 640px;
       width: 100%;
       background: var(--glass);
@@ -80,18 +99,12 @@
     }
 
     h1 {
-      font-size: clamp(2.2rem, 8vw, 4.5rem);
+      font-size: 4.5rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 1.05;
       color: var(--fg);
       animation: fadeIn 0.8s ease-out both;
-    }
-
-    p {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 1rem;
     }
 
     /* ---------- Download button (real 3D slab) ---------- */
@@ -114,12 +127,13 @@
       position: relative;
       display: inline-block;
       padding: 44px 110px;
-      font-size: clamp(1.4rem, 4.5vw, 2.1rem);
+      font-size: 2.1rem;
       font-weight: 700;
       letter-spacing: 0.02em;
       color: #ffffff;
       text-decoration: none;
       border-radius: 12px;
+      white-space: nowrap;
       transform-style: preserve-3d;
       transform: translate3d(var(--tx), var(--ty), var(--lift))
                  rotateX(var(--rx)) rotateY(var(--ry));
@@ -230,14 +244,12 @@
       outline-offset: 6px;
     }
 
-    /* ---------- Rat walk overlay (plays on Download click) ---------- */
+    /* ---------- Rat overlay: static 3D rat at the bottom of the screen ---------- */
     .rat-overlay {
       position: fixed;
       inset: 0;
       z-index: 10;
-      background: rgba(6, 12, 22, 0.9);
-      perspective: 900px;
-      overflow: hidden;
+      background: rgba(6, 12, 22, 0.88);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.35s ease;
@@ -248,96 +260,22 @@
       pointer-events: auto;
     }
 
-    .rat {
+    #rat-canvas {
       position: absolute;
-      left: 0;
-      top: 50%;
-      width: 380px;
-      height: 260px;
-      margin-top: -130px;
-      transform-style: preserve-3d;
-      transform: translateX(-420px);
-    }
-
-    .rat-overlay.active .rat {
-      animation: ratWalk 2.6s linear forwards;
-    }
-
-    .rat-inner {
+      inset: 0;
       width: 100%;
       height: 100%;
-    }
-
-    .rat-overlay.active .rat-inner {
-      animation: bob 0.4s ease-in-out infinite alternate;
-    }
-
-    .rat svg {
       display: block;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-    }
-
-    /* Walk cycle: near legs and far legs are half a cycle apart */
-    .rat-overlay.active .leg {
-      animation: legA 0.4s ease-in-out infinite alternate;
-    }
-
-    .rat-overlay.active .shin {
-      animation: shinA 0.4s ease-in-out infinite alternate;
-    }
-
-    .rat-overlay.active .p1 {
-      animation-delay: -0.4s;
-    }
-
-    .rat-overlay.active .tail {
-      animation: tailWave 0.45s ease-in-out infinite alternate;
-    }
-
-    .rat-overlay.active .lid {
-      animation: blink 3.2s infinite;
-    }
-
-    @keyframes ratWalk {
-      from { transform: translateX(-420px) rotateY(12deg); }
-      to   { transform: translateX(calc(100vw + 420px)) rotateY(-12deg); }
-    }
-
-    @keyframes bob {
-      from { transform: translateY(0) rotateX(5deg); }
-      to   { transform: translateY(-7px) rotateX(-3deg); }
-    }
-
-    @keyframes legA {
-      from { transform: rotate(-24deg); }
-      to   { transform: rotate(24deg); }
-    }
-
-    @keyframes shinA {
-      from { transform: rotate(16deg); }
-      to   { transform: rotate(-18deg); }
-    }
-
-    @keyframes tailWave {
-      from { transform: rotate(-7deg); }
-      to   { transform: rotate(9deg); }
-    }
-
-    @keyframes blink {
-      0%, 93%, 100% { transform: scaleY(0); }
-      96%           { transform: scaleY(1); }
-    }
-
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.6) translateY(20px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.6) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     @keyframes cardIn {
@@ -351,10 +289,6 @@
       to   { background-position: 28px 28px; }
     }
 
-    @media (max-width: 480px) {
-      .download-btn { padding: 32px 64px; }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       h1, .download-btn, main, .bg .grid { animation: none; }
       .download-btn { transition: none; transform: none; }
@@ -366,165 +300,36 @@
     <div class="grid"></div>
   </div>
 
-  <main>
-    <h1>Project Hexion</h1>
-    <div class="download-wrap">
-      <a id="download-btn" class="download-btn" href="/download/" draggable="false">
-        <span class="face">
-          <span class="shine"></span>
-          <span class="label">Download Hexion</span>
-        </span>
-      </a>
-    </div>
-  </main>
+  <div class="stage" id="stage">
+    <main>
+      <h1>Project Hexion</h1>
+      <div class="download-wrap">
+        <a id="download-btn" class="download-btn" href="/download/" draggable="false">
+          <span class="face">
+            <span class="shine"></span>
+            <span class="label">Download Hexion</span>
+          </span>
+        </a>
+      </div>
+    </main>
+  </div>
 
   <div id="rat-overlay" class="rat-overlay" aria-hidden="true">
-    <div class="rat">
-      <div class="rat-inner">
-        <svg viewBox="0 0 380 260" aria-hidden="true">
-          <defs>
-            <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#e6eaf1"/>
-              <stop offset="0.5" stop-color="#8a909c"/>
-              <stop offset="1" stop-color="#3b414d"/>
-            </linearGradient>
-            <radialGradient id="gHead" cx="0.35" cy="0.3" r="0.8">
-              <stop offset="0" stop-color="#eef1f6"/>
-              <stop offset="0.55" stop-color="#7a808c"/>
-              <stop offset="1" stop-color="#3b414d"/>
-            </radialGradient>
-            <linearGradient id="gLeg" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#7b8290"/>
-              <stop offset="1" stop-color="#3a404c"/>
-            </linearGradient>
-            <linearGradient id="gLegFar" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#4c5260"/>
-              <stop offset="1" stop-color="#262a34"/>
-            </linearGradient>
-            <linearGradient id="gTail" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#e3a7b5"/>
-              <stop offset="1" stop-color="#8f5e6d"/>
-            </linearGradient>
-            <radialGradient id="gEar" cx="0.5" cy="0.4" r="0.7">
-              <stop offset="0" stop-color="#f3c0cb"/>
-              <stop offset="1" stop-color="#c98297"/>
-            </radialGradient>
-            <radialGradient id="gNose" cx="0.35" cy="0.35" r="0.7">
-              <stop offset="0" stop-color="#ffc7d4"/>
-              <stop offset="1" stop-color="#b4456b"/>
-            </radialGradient>
-            <linearGradient id="gSnout" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#c5cbd6"/>
-              <stop offset="1" stop-color="#6c7280"/>
-            </linearGradient>
-            <radialGradient id="gEye" cx="0.4" cy="0.35" r="0.7">
-              <stop offset="0" stop-color="#4a3f40"/>
-              <stop offset="1" stop-color="#050506"/>
-            </radialGradient>
-            <pattern id="fur" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(28)">
-              <path d="M1 6 Q2 3 2.6 0.5" stroke="rgba(255,255,255,0.22)" stroke-width="0.9" fill="none"/>
-              <path d="M4.6 7 Q5.4 4 5.9 1.5" stroke="rgba(0,0,0,0.15)" stroke-width="0.8" fill="none"/>
-            </pattern>
-            <clipPath id="eyeClip"><circle cx="254" cy="102" r="5.6"/></clipPath>
-            <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="4"/>
-            </filter>
-          </defs>
-
-          <!-- ground shadow -->
-          <ellipse cx="190" cy="236" rx="120" ry="9" fill="#000" opacity="0.55" filter="url(#soft)"/>
-
-          <!-- tail: a curved stroke with ring pattern on top, waving from its base -->
-          <g class="tail" style="transform-origin: 80px 150px;">
-            <path d="M80 150 C44 160 22 140 16 110 C10 86 18 70 8 52" fill="none" stroke="url(#gTail)" stroke-width="7" stroke-linecap="round"/>
-            <path d="M80 150 C44 160 22 140 16 110 C10 86 18 70 8 52" fill="none" stroke="#6e4452" stroke-width="7" stroke-dasharray="3 4" opacity="0.55"/>
-            <path d="M80 150 C44 160 22 140 16 110 C10 86 18 70 8 52" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" stroke-linecap="round" transform="translate(0,-1.5)"/>
-          </g>
-
-          <!-- far legs (behind the body) -->
-          <g class="leg p1" style="transform-origin: 142px 164px;">
-            <path d="M142 164 L136 200" stroke="url(#gLegFar)" stroke-width="13" stroke-linecap="round"/>
-            <g class="shin" style="transform-origin: 136px 200px;">
-              <path d="M136 200 L140 222" stroke="url(#gLegFar)" stroke-width="10" stroke-linecap="round"/>
-              <ellipse cx="145" cy="224" rx="8" ry="4" fill="#5d6472"/>
-            </g>
-          </g>
-          <g class="leg" style="transform-origin: 232px 162px;">
-            <path d="M232 162 L228 198" stroke="url(#gLegFar)" stroke-width="13" stroke-linecap="round"/>
-            <g class="shin" style="transform-origin: 228px 198px;">
-              <path d="M228 198 L234 222" stroke="url(#gLegFar)" stroke-width="10" stroke-linecap="round"/>
-              <ellipse cx="237" cy="224" rx="8" ry="4" fill="#5d6472"/>
-            </g>
-          </g>
-
-          <!-- body -->
-          <ellipse cx="170" cy="136" rx="84" ry="44" fill="url(#gBody)"/>
-          <ellipse cx="170" cy="136" rx="84" ry="44" fill="url(#fur)" opacity="0.7"/>
-          <ellipse cx="128" cy="140" rx="40" ry="38" fill="rgba(30,34,44,0.38)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <ellipse cx="128" cy="140" rx="40" ry="38" fill="url(#fur)" opacity="0.5"/>
-          <ellipse cx="222" cy="126" rx="24" ry="22" fill="rgba(255,255,255,0.12)"/>
-          <ellipse cx="172" cy="170" rx="66" ry="14" fill="#d4d9e2" opacity="0.55"/>
-          <ellipse cx="160" cy="96" rx="62" ry="6" fill="#ffffff" opacity="0.22" filter="url(#soft)"/>
-
-          <!-- near back leg -->
-          <g class="leg p1" style="transform-origin: 122px 166px;">
-            <path d="M122 166 L112 202" stroke="url(#gLeg)" stroke-width="15" stroke-linecap="round"/>
-            <g class="shin" style="transform-origin: 112px 202px;">
-              <path d="M112 202 L118 224" stroke="url(#gLeg)" stroke-width="12" stroke-linecap="round"/>
-              <ellipse cx="124" cy="227" rx="9" ry="4.5" fill="#8f96a3"/>
-              <path d="M125 227 l1 3 M122 227 l0 3 M119 227 l-1 3" stroke="#e9e4d6" stroke-width="1" stroke-linecap="round"/>
-            </g>
-          </g>
-
-          <!-- head -->
-          <ellipse cx="252" cy="110" rx="36" ry="33" fill="url(#gHead)"/>
-          <ellipse cx="252" cy="110" rx="36" ry="33" fill="url(#fur)" opacity="0.6"/>
-          <ellipse cx="262" cy="124" rx="18" ry="12" fill="#e9ecf2" opacity="0.5"/>
-          <path d="M236 92 Q248 86 262 92" stroke="#2c3038" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
-
-          <!-- ears -->
-          <ellipse cx="236" cy="78" rx="13" ry="14" fill="#6f7685"/>
-          <ellipse cx="248" cy="80" rx="13" ry="14" fill="url(#gEar)" stroke="#7d8390" stroke-width="1.5"/>
-          <ellipse cx="249" cy="81" rx="8" ry="9" fill="#fbd3dc" opacity="0.85"/>
-          <path d="M249 74 Q247 80 249 88" stroke="rgba(190,100,120,0.45)" stroke-width="0.8" fill="none"/>
-
-          <!-- snout, nose, mouth, teeth -->
-          <path d="M270 110 Q296 108 308 120 Q306 128 292 130 Q276 132 268 128 Z" fill="url(#gSnout)"/>
-          <path d="M290 130 Q298 132 304 127" stroke="#3a3f4b" stroke-width="1" fill="none"/>
-          <path d="M292 130 L293.5 141 L296.5 130 Z" fill="#fff3c4" stroke="#b9a660" stroke-width="0.6"/>
-          <ellipse cx="306" cy="119" rx="5.5" ry="4.8" fill="url(#gNose)"/>
-          <circle cx="304" cy="117" r="1.4" fill="#ffffff" opacity="0.8"/>
-
-          <!-- whiskers -->
-          <g stroke="rgba(235,240,250,0.85)" stroke-width="0.9" stroke-linecap="round" fill="none">
-            <path d="M304 119 Q330 108 360 102"/>
-            <path d="M305 121 Q332 118 362 116"/>
-            <path d="M305 123 Q332 128 360 132"/>
-            <path d="M303 125 Q328 138 352 150"/>
-          </g>
-
-          <!-- eye with highlight, rim and blink lid -->
-          <circle cx="254" cy="102" r="5.6" fill="url(#gEye)"/>
-          <circle cx="252.2" cy="100.2" r="1.6" fill="#ffffff"/>
-          <circle cx="254" cy="102" r="6.4" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1"/>
-          <rect class="lid" x="246" y="95" width="16" height="13" fill="#5b6170" clip-path="url(#eyeClip)" style="transform-origin: 254px 95px;"/>
-
-          <!-- near front leg (in front of body) -->
-          <g class="leg" style="transform-origin: 206px 166px;">
-            <path d="M206 166 L204 200" stroke="url(#gLeg)" stroke-width="15" stroke-linecap="round"/>
-            <g class="shin" style="transform-origin: 204px 200px;">
-              <path d="M204 200 L212 224" stroke="url(#gLeg)" stroke-width="12" stroke-linecap="round"/>
-              <ellipse cx="218" cy="227" rx="9" ry="4.5" fill="#8f96a3"/>
-              <path d="M219 227 l1 3 M216 227 l0 3 M213 227 l-1 3" stroke="#e9e4d6" stroke-width="1" stroke-linecap="round"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
+    <canvas id="rat-canvas"></canvas>
   </div>
 
   <script>
     (function () {
+      // Scale the 1200x800 stage to fit the browser window
+      var stage = document.getElementById('stage');
+      function fit() {
+        var s = Math.min(window.innerWidth / 1200, window.innerHeight / 800) * 0.94;
+        s = Math.max(0.35, Math.min(s, 2));
+        stage.style.setProperty('--s', s.toFixed(4));
+      }
+      fit();
+      window.addEventListener('resize', fit);
+
       // Block dragging of links, images and selected content
       document.addEventListener('dragstart', function (e) {
         e.preventDefault();
@@ -534,14 +339,14 @@
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!btn) return;
 
-      // Clicking Download Hexion plays the rat walk, then opens /download/
+      // Clicking Download Hexion shows the rat at the bottom, then opens /download/
       btn.addEventListener('click', function (e) {
         if (reduce) return;
         e.preventDefault();
         document.getElementById('rat-overlay').classList.add('active');
         setTimeout(function () {
           window.location.href = btn.getAttribute('href');
-        }, 2800);
+        }, 2200);
       });
 
       // Build the slab's thickness: layers stacked behind the front face.
@@ -552,7 +357,6 @@
         var layer = document.createElement('span');
         layer.className = 'layer';
         layer.setAttribute('aria-hidden', 'true');
-        // Spread evenly from the back of the slab to just under the face
         layer.style.setProperty('--z', (-(i / (LAYERS - 1)) * depth + depth - 0.5) + 'px');
         fragment.appendChild(layer);
       }
@@ -590,6 +394,72 @@
         btn.style.setProperty('--my', '50%');
       });
     })();
+  </script>
+
+  <script type="module">
+    // Static 3D rat (not animated), placed at the bottom of the screen.
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    var canvas = document.getElementById('rat-canvas');
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+    camera.position.set(0, 0, 6);
+
+    scene.add(new THREE.HemisphereLight(0xcfe6ff, 0x1a2233, 1.4));
+    var key = new THREE.DirectionalLight(0xffffff, 2.2);
+    key.position.set(3, 5, 4);
+    scene.add(key);
+    var fill = new THREE.DirectionalLight(0x77bcfb, 0.8);
+    fill.position.set(-4, 2, -3);
+    scene.add(fill);
+
+    var pivot = new THREE.Group();
+    scene.add(pivot);
+
+    var rat = null;
+    var maxDim = 1;
+
+    function layout() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+
+      var halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+      var halfW = halfH * camera.aspect;
+
+      if (rat) {
+        // Fit the rat's length to about 45% of the visible width, and at most 35% of the height
+        var target = Math.min(halfW * 2 * 0.45, halfH * 2 * 0.35);
+        var s = target / maxDim;
+        rat.scale.setScalar(s);
+        var height = maxDim * s * 0.5; // approximate half height of the model
+        // Bottom of the rat sits near the bottom edge of the screen
+        pivot.position.set(0, -halfH * 0.92 + height, 0);
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    new GLTFLoader().load('rat/street_rat_1k.gltf', function (gltf) {
+      rat = gltf.scene;
+      var box = new THREE.Box3().setFromObject(rat);
+      var size = box.getSize(new THREE.Vector3());
+      var center = box.getCenter(new THREE.Vector3());
+      maxDim = Math.max(size.x, size.y, size.z) || 1;
+      rat.position.sub(center);
+      pivot.add(rat);
+      layout();
+    });
+
+    window.addEventListener('resize', layout);
+    layout();
   </script>
 </body>
 </html>
