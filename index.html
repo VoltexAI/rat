@@ -23,10 +23,7 @@
       position: relative;
       min-height: 100vh;
       min-height: 100dvh;
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.25), transparent 60%),
-        radial-gradient(900px 500px at 110% 110%, rgba(0, 212, 255, 0.18), transparent 60%),
-        var(--bg);
+      background: linear-gradient(180deg, #0c0e16 0%, #06070c 100%);
       color: var(--fg);
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       display: flex;
@@ -45,49 +42,22 @@
       pointer-events: none;
     }
 
+    /* Fine dot field that drifts slowly, with a dark vignette at the edges */
     .bg .grid {
       position: absolute;
-      inset: -50%;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 48px 48px;
-      transform: perspective(600px) rotateX(60deg);
-      transform-origin: center top;
-      mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent 85%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent 85%);
-      animation: gridMove 20s linear infinite;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1.2px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
+      animation: gridMove 40s linear infinite;
     }
 
-    .orb {
+    .bg::after {
+      content: "";
       position: absolute;
-      border-radius: 50%;
-      filter: blur(70px);
-      opacity: 0.55;
-      animation: float 18s ease-in-out infinite;
-    }
-
-    .orb.a {
-      width: 420px; height: 420px;
-      background: var(--accent);
-      top: -120px; left: -100px;
-    }
-
-    .orb.b {
-      width: 360px; height: 360px;
-      background: var(--accent-2);
-      bottom: -120px; right: -80px;
-      animation-duration: 22s;
-      animation-delay: -6s;
-    }
-
-    .orb.c {
-      width: 260px; height: 260px;
-      background: var(--accent-3);
-      top: 40%; left: 55%;
-      opacity: 0.3;
-      animation-duration: 26s;
-      animation-delay: -12s;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
     }
 
     /* ---------- Content card ---------- */
@@ -98,12 +68,10 @@
       padding: clamp(32px, 6vw, 60px) clamp(20px, 6vw, 64px);
       max-width: 640px;
       width: 100%;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 28px;
-      backdrop-filter: blur(14px) saturate(140%);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      background: #0e1019;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 40px rgba(0, 0, 0, 0.5);
       animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
@@ -112,10 +80,7 @@
       font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 1.05;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #ffffff;
       animation: fadeIn 0.8s ease-out both;
     }
 
@@ -138,8 +103,6 @@
       margin-top: 40px;
       display: inline-block;
       perspective: 1000px;
-      /* soft shadow that sits under the button */
-      filter: drop-shadow(0 22px 22px rgba(34, 197, 94, 0.28));
     }
 
     .download-btn {
@@ -310,9 +273,6 @@
 <body>
   <div class="bg" aria-hidden="true">
     <div class="grid"></div>
-    <div class="orb a"></div>
-    <div class="orb b"></div>
-    <div class="orb c"></div>
   </div>
 
   <main>
