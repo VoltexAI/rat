@@ -230,6 +230,173 @@
       outline-offset: 6px;
     }
 
+    /* ---------- Rat walk overlay (plays on Download click) ---------- */
+    .rat-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: rgba(6, 12, 22, 0.9);
+      perspective: 900px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .rat-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .rat-overlay .rat {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 240px;
+      height: 180px;
+      margin-top: -90px;
+      transform-style: preserve-3d;
+      transform: translateX(-320px);
+    }
+
+    .rat-overlay.active .rat {
+      animation: ratWalk 2.4s linear forwards;
+    }
+
+    .rat-inner {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+    }
+
+    .rat-overlay.active .rat-inner {
+      animation: bob 0.4s ease-in-out infinite alternate;
+    }
+
+    .rat .body {
+      position: absolute;
+      left: 40px; top: 50px;
+      width: 150px; height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #c3c8d1, #5b616e 72%);
+      box-shadow: inset -8px -10px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .rat .head {
+      position: absolute;
+      left: 168px; top: 26px;
+      width: 66px; height: 58px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #d2d6dd, #646a77 75%);
+      transform: translateZ(14px);
+    }
+
+    .rat .ear {
+      position: absolute;
+      left: 188px; top: 10px;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #e9a6b5;
+      transform: translateZ(10px);
+    }
+
+    .rat .snout {
+      position: absolute;
+      left: 206px; top: 48px;
+      width: 42px; height: 24px;
+      border-radius: 50%;
+      background: #7d8390;
+      transform: translateZ(18px);
+    }
+
+    .rat .nose {
+      position: absolute;
+      left: 238px; top: 50px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #f08aa0;
+      transform: translateZ(24px);
+    }
+
+    .rat .eye {
+      position: absolute;
+      left: 206px; top: 36px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #0b0d12;
+      box-shadow: 0 0 0 2px #ffffff;
+      transform: translateZ(22px);
+    }
+
+    .rat .tail {
+      position: absolute;
+      left: 0; top: 86px;
+      width: 80px; height: 5px;
+      border-radius: 4px;
+      background: #c98ea0;
+      transform-origin: 100% 50%;
+      transform: rotate(-20deg) translateZ(-4px);
+    }
+
+    .rat-overlay.active .tail {
+      animation: tailWag 0.3s ease-in-out infinite alternate;
+    }
+
+    .rat .leg {
+      position: absolute;
+      top: 112px;
+      width: 14px; height: 46px;
+      border-radius: 7px;
+      background: #4a4f5a;
+      transform-origin: 50% 0;
+    }
+
+    .rat .l1 { left: 60px; }
+    .rat .l2 { left: 84px; }
+    .rat .l3 { left: 150px; }
+    .rat .l4 { left: 172px; }
+
+    .rat-overlay.active .l1,
+    .rat-overlay.active .l4 {
+      animation: legSwing 0.4s ease-in-out infinite alternate;
+    }
+
+    .rat-overlay.active .l2,
+    .rat-overlay.active .l3 {
+      animation: legSwing 0.4s ease-in-out infinite alternate;
+      animation-delay: -0.4s;
+    }
+
+    .rat .rat-shadow {
+      position: absolute;
+      left: 40px; top: 160px;
+      width: 170px; height: 16px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      filter: blur(5px);
+      transform: translateZ(-10px);
+    }
+
+    @keyframes ratWalk {
+      from { transform: translateX(-320px) rotateY(18deg); }
+      to   { transform: translateX(calc(100vw + 320px)) rotateY(-18deg); }
+    }
+
+    @keyframes bob {
+      from { transform: translateY(0) rotateX(6deg); }
+      to   { transform: translateY(-8px) rotateX(-4deg); }
+    }
+
+    @keyframes legSwing {
+      from { transform: rotate(-24deg); }
+      to   { transform: rotate(24deg); }
+    }
+
+    @keyframes tailWag {
+      from { transform: rotate(-30deg) translateZ(-4px); }
+      to   { transform: rotate(-12deg) translateZ(-4px); }
+    }
+
     @keyframes popIn {
       from { opacity: 0; transform: scale(0.6) translateY(20px); }
       to   { opacity: 1; transform: scale(1) translateY(0); }
@@ -275,7 +442,7 @@
   <main>
     <h1>Project Hexion</h1>
     <div class="download-wrap">
-      <a id="download-btn" class="download-btn" href="hexion.zip" download draggable="false">
+      <a id="download-btn" class="download-btn" href="/download/" draggable="false">
         <span class="face">
           <span class="shine"></span>
           <span class="label">Download Hexion</span>
@@ -283,6 +450,25 @@
       </a>
     </div>
   </main>
+
+  <div id="rat-overlay" class="rat-overlay" aria-hidden="true">
+    <div class="rat">
+      <div class="rat-inner">
+        <div class="tail"></div>
+        <div class="body"></div>
+        <div class="head"></div>
+        <div class="ear"></div>
+        <div class="snout"></div>
+        <div class="nose"></div>
+        <div class="eye"></div>
+        <div class="leg l1"></div>
+        <div class="leg l2"></div>
+        <div class="leg l3"></div>
+        <div class="leg l4"></div>
+        <div class="rat-shadow"></div>
+      </div>
+    </div>
+  </div>
 
   <script>
     (function () {
@@ -294,6 +480,16 @@
       var btn = document.getElementById('download-btn');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!btn) return;
+
+      // Clicking Download Hexion plays the rat walk, then opens /download/
+      btn.addEventListener('click', function (e) {
+        if (reduce) return;
+        e.preventDefault();
+        document.getElementById('rat-overlay').classList.add('active');
+        setTimeout(function () {
+          window.location.href = btn.getAttribute('href');
+        }, 2600);
+      });
 
       // Build the slab's thickness: layers stacked behind the front face.
       var LAYERS = 28;
