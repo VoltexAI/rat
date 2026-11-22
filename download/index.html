@@ -292,8 +292,8 @@
       // Scale the 1200x800 stage to fit the browser window
       var stage = document.getElementById('stage');
       function fit() {
-        var s = Math.min(window.innerWidth / 1200, window.innerHeight / 800) * 0.94;
-        s = Math.max(0.35, Math.min(s, 2));
+        var s = Math.min(window.innerWidth / 1600, window.innerHeight / 1000) * 0.94;
+        s = Math.max(0.3, Math.min(s, 1.6));
         stage.style.setProperty('--s', s.toFixed(4));
       }
       fit();
