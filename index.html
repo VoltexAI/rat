@@ -160,7 +160,7 @@
 
       position: relative;
       display: inline-block;
-      padding: 44px 110px;
+      padding: 0;
       font-size: clamp(1.4rem, 4.5vw, 2.1rem);
       font-weight: 700;
       letter-spacing: 0.02em;
@@ -200,8 +200,8 @@
 
     /* Front face: the part you see and click */
     .download-btn .face {
-      position: absolute;
-      inset: 0;
+      position: relative;
+      padding: 44px 110px;
       border-radius: inherit;
       display: flex;
       align-items: center;
@@ -310,7 +310,7 @@
     }
 
     @media (max-width: 480px) {
-      .download-btn { padding: 32px 64px; }
+      .download-btn .face { padding: 28px 36px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
