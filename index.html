@@ -90,14 +90,6 @@
       font-size: 1rem;
     }
 
-    #clock {
-      margin-top: 28px;
-      font-variant-numeric: tabular-nums;
-      font-size: 0.85rem;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-    }
-
     /* ---------- Download button (real 3D slab) ---------- */
     .download-wrap {
       margin-top: 40px;
@@ -277,7 +269,6 @@
 
   <main>
     <h1>Project hexion</h1>
-    <p>Welcome.</p>
     <div class="download-wrap">
       <a id="download-btn" class="download-btn" href="hexion.zip" download>
         <span class="face">
@@ -286,18 +277,10 @@
         </span>
       </a>
     </div>
-    <div id="clock" aria-live="polite"></div>
   </main>
 
   <script>
     (function () {
-      var clock = document.getElementById('clock');
-      function tick() {
-        clock.textContent = new Date().toLocaleTimeString();
-      }
-      tick();
-      setInterval(tick, 1000);
-
       var btn = document.getElementById('download-btn');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!btn) return;
