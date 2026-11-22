@@ -14,6 +14,7 @@
       --muted: #9aa3b2;
       --glass: rgba(255, 255, 255, 0.05);
       --glass-border: rgba(255, 255, 255, 0.12);
+      --btn-depth: 16px;          /* thickness of the 3D button */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -94,7 +95,7 @@
       position: relative;
       z-index: 1;
       text-align: center;
-      padding: clamp(28px, 6vw, 56px) clamp(20px, 6vw, 64px);
+      padding: clamp(32px, 6vw, 60px) clamp(20px, 6vw, 64px);
       max-width: 640px;
       width: 100%;
       background: var(--glass);
@@ -110,6 +111,7 @@
       font-size: clamp(2.2rem, 8vw, 4.5rem);
       font-weight: 800;
       letter-spacing: -0.02em;
+      line-height: 1.05;
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
       -webkit-background-clip: text;
       background-clip: text;
@@ -124,17 +126,20 @@
     }
 
     #clock {
-      margin-top: 24px;
+      margin-top: 28px;
       font-variant-numeric: tabular-nums;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
       color: var(--muted);
     }
 
-    /* ---------- Download button (3D) ---------- */
+    /* ---------- Download button (real 3D slab) ---------- */
     .download-wrap {
-      margin-top: 36px;
+      margin-top: 40px;
       display: inline-block;
-      perspective: 900px;
+      perspective: 1000px;
+      /* soft shadow that sits under the button */
+      filter: drop-shadow(0 22px 22px rgba(34, 197, 94, 0.28));
     }
 
     .download-btn {
@@ -149,23 +154,24 @@
 
       position: relative;
       display: inline-block;
-      padding: 16px 38px;
+      padding: 18px 42px;
       font-size: 1.05rem;
       font-weight: 700;
       letter-spacing: 0.02em;
       color: #ffffff;
       text-decoration: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      box-shadow: 0 8px 0 #0f7a36, 0 14px 30px rgba(34, 197, 94, 0.35);
+      border-radius: 16px;
       transform-style: preserve-3d;
       transform: translate3d(var(--tx), var(--ty), var(--lift))
                  rotateX(var(--rx)) rotateY(var(--ry));
-      /* Springy return when the mouse leaves */
-      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.35s ease;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
       animation: popIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
       will-change: transform;
+      cursor: pointer;
+    }
+
+    .download-btn:hover {
+      transition: transform 0.12s ease-out;
     }
 
     /* Invisible hit area: extends the hover zone 32px beyond the button */
@@ -173,39 +179,48 @@
       content: "";
       position: absolute;
       inset: -32px;
-      border-radius: 40px;
+      border-radius: 48px;
     }
 
-    /* Tight, responsive follow while the mouse is over the button */
-    .download-btn:hover {
-      transition: transform 0.12s ease-out, box-shadow 0.25s ease;
-      box-shadow: 0 3px 0 #0f7a36, 0 0 0 rgba(34, 197, 94, 0), 0 18px 40px rgba(34, 197, 94, 0.5);
+    /* Stacked layers form the thickness of the slab (the "sides") */
+    .download-btn .layer {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, #14803c, #0a5a29);
+      transform: translateZ(var(--z));
     }
 
-    .download-btn:active {
-      box-shadow: 0 1px 0 #0f7a36, 0 4px 10px rgba(34, 197, 94, 0.3);
+    /* Front face: the part you see and click */
+    .download-btn .face {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #34d870, #16a34a 60%, #15803d);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                  inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+      transform: translateZ(var(--btn-depth));
+      transform-style: preserve-3d;
     }
 
-    .download-btn:focus-visible {
-      outline: 3px solid #86efac;
-      outline-offset: 4px;
-    }
-
-    /* Specular highlight that follows the cursor (sits above the face) */
-    .download-btn::after {
+    /* Specular highlight that follows the cursor */
+    .download-btn .face::after {
       content: "";
       position: absolute;
       inset: 0;
       border-radius: inherit;
       background: radial-gradient(circle at var(--mx) var(--my),
-                  rgba(255, 255, 255, 0.4), transparent 60%);
+                  rgba(255, 255, 255, 0.45), transparent 60%);
       opacity: 0;
-      transform: translateZ(1px);
       transition: opacity 0.3s ease;
       pointer-events: none;
     }
 
-    .download-btn:hover::after {
+    .download-btn:hover .face::after {
       opacity: 1;
     }
 
@@ -238,12 +253,22 @@
     .download-btn .label {
       position: relative;
       display: inline-block;
-      transform: translateZ(40px);
+      transform: translateZ(14px);
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
       transition: text-shadow 0.3s ease;
     }
 
     .download-btn:hover .label {
-      text-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .download-btn:active {
+      transform: translate3d(var(--tx), calc(var(--ty) + 4px), 0) rotateX(var(--rx)) rotateY(var(--ry));
+    }
+
+    .download-btn:focus-visible {
+      outline: 3px solid #86efac;
+      outline-offset: 6px;
     }
 
     @keyframes popIn {
@@ -273,7 +298,7 @@
     }
 
     @media (max-width: 480px) {
-      .download-btn { padding: 14px 28px; }
+      .download-btn { padding: 16px 30px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -295,8 +320,10 @@
     <p>Welcome.</p>
     <div class="download-wrap">
       <a id="download-btn" class="download-btn" href="hexion.zip" download>
-        <span class="shine"></span>
-        <span class="label">Download Hexion</span>
+        <span class="face">
+          <span class="shine"></span>
+          <span class="label">Download Hexion</span>
+        </span>
       </a>
     </div>
     <div id="clock" aria-live="polite"></div>
@@ -311,39 +338,56 @@
       tick();
       setInterval(tick, 1000);
 
-      // 3D hover: the button lifts toward the viewer, tilts toward the cursor,
-      // sinks slightly, and its highlight follows the pointer.
       var btn = document.getElementById('download-btn');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (btn && !reduce) {
-        btn.addEventListener('mousemove', function (e) {
-          var r = btn.getBoundingClientRect();
-          // Clamp to the button's edges so the hit area's outer margin
-          // doesn't tilt the button further than its own edge.
-          var px = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-          var py = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
-          var x = px - 0.5;                           // -0.5 .. 0.5
-          var y = py - 0.5;
+      if (!btn) return;
 
-          btn.style.setProperty('--ry', (x * 22).toFixed(2) + 'deg');
-          btn.style.setProperty('--rx', (-y * 22).toFixed(2) + 'deg');
-          btn.style.setProperty('--tx', (x * 10).toFixed(2) + 'px');
-          btn.style.setProperty('--ty', (6 + y * 4).toFixed(2) + 'px');
-          btn.style.setProperty('--lift', '28px');
-          btn.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
-          btn.style.setProperty('--my', (py * 100).toFixed(1) + '%');
-        });
-
-        btn.addEventListener('mouseleave', function () {
-          btn.style.setProperty('--rx', '0deg');
-          btn.style.setProperty('--ry', '0deg');
-          btn.style.setProperty('--tx', '0px');
-          btn.style.setProperty('--ty', '0px');
-          btn.style.setProperty('--lift', '0px');
-          btn.style.setProperty('--mx', '50%');
-          btn.style.setProperty('--my', '50%');
-        });
+      // Build the slab's thickness: layers stacked behind the front face.
+      var LAYERS = 16;
+      var depth = parseFloat(getComputedStyle(document.documentElement)
+                    .getPropertyValue('--btn-depth')) || 16;
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < LAYERS; i++) {
+        var layer = document.createElement('span');
+        layer.className = 'layer';
+        layer.setAttribute('aria-hidden', 'true');
+        // Spread evenly from the back of the slab to just under the face
+        layer.style.setProperty('--z', (-(i / (LAYERS - 1)) * depth + depth - 0.5) + 'px');
+        fragment.appendChild(layer);
       }
+      btn.insertBefore(fragment, btn.firstChild);
+
+      if (reduce) return;
+
+      // 3D hover: the slab lifts toward the viewer, tilts toward the cursor,
+      // sinks slightly, and its highlight follows the pointer.
+      btn.addEventListener('mousemove', function (e) {
+        var r = btn.getBoundingClientRect();
+        // Clamp to the button's edges so the hit area's margin
+        // doesn't tilt the button further than its own edge.
+        var px = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+        var py = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+        var x = px - 0.5;
+        var y = py - 0.5;
+
+        btn.style.setProperty('--ry', (x * 30).toFixed(2) + 'deg');
+        btn.style.setProperty('--rx', (-y * 30).toFixed(2) + 'deg');
+        btn.style.setProperty('--tx', (x * 10).toFixed(2) + 'px');
+        btn.style.setProperty('--ty', (6 + y * 4).toFixed(2) + 'px');
+        btn.style.setProperty('--lift', '34px');
+        btn.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+        btn.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+      });
+
+      btn.addEventListener('mouseleave', function () {
+        btn.style.setProperty('--rx', '0deg');
+        btn.style.setProperty('--ry', '0deg');
+        btn.style.setProperty('--tx', '0px');
+        btn.style.setProperty('--ty', '0px');
+        btn.style.setProperty('--lift', '0px');
+        btn.style.setProperty('--mx', '50%');
+        btn.style.setProperty('--my', '50%');
+      });
     })();
   </script>
 </body>
