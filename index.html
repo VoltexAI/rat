@@ -462,7 +462,7 @@
     var halfX = 0.5, halfY = 0.2;    // rat half-extents after scaling (world units)
 
     var running = false, pendingDrop = false;
-    var t = 0, acc = 0, last = 0, settledAt = null;
+    var t = 0, acc = 0, last = 0, settledAt = null, windSign = 1;
 
     function wrap(a) {
       return Math.atan2(Math.sin(a), Math.cos(a));
@@ -501,16 +501,17 @@
     function spawnRat() {
       if (ratBody) Composite.remove(engine.world, ratBody);
       var hx = halfX * PX, hy = halfY * PX;
+      windSign = Math.random() < 0.5 ? -1 : 1;   // each drop is pushed by a gust in a random direction
       ratBody = Bodies.rectangle(
-        (Math.random() - 0.5) * halfW * PX * 1.2,
+        0,                             // drop in the middle of the screen
         -halfH * PX - hy - 40,         // start fully above the top edge
         2 * hx, 2 * hy,
         { chamfer: { radius: hy * 0.9 }, restitution: 0.35, friction: 0.8, frictionAir: 0.02, density: 0.001 }
       );
       Composite.add(engine.world, ratBody);
-      Body.setAngle(ratBody, (Math.random() - 0.5) * 1.6);
-      Body.setAngularVelocity(ratBody, (Math.random() - 0.5) * 0.04);
-      Body.setVelocity(ratBody, { x: (Math.random() - 0.5) * 2, y: 0 });
+      Body.setAngle(ratBody, (Math.random() - 0.5) * 0.1);
+      Body.setAngularVelocity(ratBody, (Math.random() - 0.5) * 0.01);
+      Body.setVelocity(ratBody, { x: (Math.random() - 0.5) * 0.2, y: 0 });
     }
 
     function placeMesh() {
@@ -524,22 +525,17 @@
       t += 1 / 60;
       var grounded = ratBody.bounds.max.y >= floorPx() - 2;
 
-      if (t < 2.5) {
-        var windX = 0.9 * Math.sin(t * 0.9) + 0.5 * Math.sin(t * 2.3 + 1.1) + 0.35 * Math.sin(t * 5.1 + 0.4);
-        Body.applyForce(ratBody, ratBody.position, { x: windX * 0.08 * ratBody.mass, y: 0 });
+      if (t < 2.5 && !grounded) {
+        var windX = windSign * (0.6 * Math.sin(t * 0.9) + 0.3 * Math.sin(t * 2.3 + 1.1));
+        Body.applyForce(ratBody, ratBody.position, { x: windX * 0.0002 * ratBody.mass, y: 0 });
         // Pushing near the top adds torque, so the rat tumbles in the wind
         Body.applyForce(ratBody, { x: ratBody.position.x, y: ratBody.position.y - halfY * PX },
-          { x: windX * 0.024 * ratBody.mass, y: 0 });
+          { x: windX * 0.00006 * ratBody.mass, y: 0 });
       }
 
-      // Once on the floor, roll the rat back to upright
-      if (grounded && t > 2.0) {
-        var a = wrap(ratBody.angle);
-        if (Math.abs(a) > 0.01) {
-          Body.setAngularVelocity(ratBody, -Math.sign(a) * Math.min(0.03, Math.abs(a) * 0.2));
-        } else {
-          Body.setAngularVelocity(ratBody, ratBody.angularVelocity * 0.5);
-        }
+      // In the air, a gentle spring pulls the rat toward upright so it lands on its feet
+      if (!grounded) {
+        Body.setAngularVelocity(ratBody, ratBody.angularVelocity - 0.002 * wrap(ratBody.angle) - 0.03 * ratBody.angularVelocity);
       }
 
       Engine.update(engine, 1000 / 60);
