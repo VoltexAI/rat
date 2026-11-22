@@ -106,20 +106,6 @@
       animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
-    .eyebrow {
-      display: inline-block;
-      margin-bottom: 14px;
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent-2);
-      border: 1px solid rgba(0, 212, 255, 0.35);
-      border-radius: 999px;
-      background: rgba(0, 212, 255, 0.08);
-    }
-
     h1 {
       font-size: clamp(2.2rem, 8vw, 4.5rem);
       font-weight: 800;
@@ -144,16 +130,26 @@
       color: var(--muted);
     }
 
+    /* ---------- Download button (3D) ---------- */
     .download-wrap {
-      margin-top: 32px;
-      perspective: 800px;
+      margin-top: 36px;
       display: inline-block;
+      perspective: 900px;
     }
 
     .download-btn {
+      /* Driven by JS on hover; reset to rest values here */
+      --mx: 50%;
+      --my: 50%;
+      --rx: 0deg;
+      --ry: 0deg;
+      --tx: 0px;
+      --ty: 0px;
+      --lift: 0px;
+
       position: relative;
       display: inline-block;
-      padding: 16px 36px;
+      padding: 16px 38px;
       font-size: 1.05rem;
       font-weight: 700;
       letter-spacing: 0.02em;
@@ -162,39 +158,24 @@
       border-radius: 14px;
       background: linear-gradient(135deg, #22c55e, #16a34a);
       box-shadow: 0 8px 0 #0f7a36, 0 14px 30px rgba(34, 197, 94, 0.35);
-      overflow: hidden;
       transform-style: preserve-3d;
-      transform: translate(var(--tx, 0px), var(--ty, 0px)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-      transition: transform 0.2s ease-out, box-shadow 0.25s ease;
-      animation: popIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards,
-                 pulse 2.4s ease-in-out 1.2s infinite;
+      transform: translate3d(var(--tx), var(--ty), var(--lift))
+                 rotateX(var(--rx)) rotateY(var(--ry));
+      /* Springy return when the mouse leaves */
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.35s ease;
+      animation: popIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
       will-change: transform;
     }
 
-    /* Shine sweep across the button on hover */
-    .download-btn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -75%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-      transform: skewX(-20deg);
-      transition: left 0.6s ease;
-      pointer-events: none;
-    }
-
-    .download-btn:hover::before {
-      left: 130%;
-    }
-
+    /* Tight, responsive follow while the mouse is over the button */
     .download-btn:hover {
-      box-shadow: 0 3px 0 #0f7a36, 0 10px 24px rgba(34, 197, 94, 0.5);
+      transition: transform 0.12s ease-out, box-shadow 0.25s ease;
+      box-shadow: 0 3px 0 #0f7a36, 0 0 0 rgba(34, 197, 94, 0), 0 18px 40px rgba(34, 197, 94, 0.5);
     }
 
     .download-btn:active {
-      box-shadow: 0 3px 0 #0f7a36, 0 6px 12px rgba(34, 197, 94, 0.3);
+      box-shadow: 0 1px 0 #0f7a36, 0 4px 10px rgba(34, 197, 94, 0.3);
     }
 
     .download-btn:focus-visible {
@@ -202,20 +183,64 @@
       outline-offset: 4px;
     }
 
+    /* Specular highlight that follows the cursor (sits above the face) */
+    .download-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at var(--mx) var(--my),
+                  rgba(255, 255, 255, 0.4), transparent 60%);
+      opacity: 0;
+      transform: translateZ(1px);
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .download-btn:hover::after {
+      opacity: 1;
+    }
+
+    /* Shine sweep, clipped to the rounded face */
+    .download-btn .shine {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .download-btn .shine::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.7s ease;
+    }
+
+    .download-btn:hover .shine::before {
+      left: 130%;
+    }
+
+    /* Label floats above the face for depth */
     .download-btn .label {
       position: relative;
       display: inline-block;
-      transform: translateZ(30px);
+      transform: translateZ(40px);
+      transition: text-shadow 0.3s ease;
+    }
+
+    .download-btn:hover .label {
+      text-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
     }
 
     @keyframes popIn {
       from { opacity: 0; transform: scale(0.6) translateY(20px); }
       to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { filter: brightness(1); }
-      50%      { filter: brightness(1.12); }
     }
 
     @keyframes fadeIn {
@@ -262,6 +287,7 @@
     <p>Welcome.</p>
     <div class="download-wrap">
       <a id="download-btn" class="download-btn" href="hexion.zip" download>
+        <span class="shine"></span>
         <span class="label">Download Hexion</span>
       </a>
     </div>
@@ -277,26 +303,35 @@
       tick();
       setInterval(tick, 1000);
 
-      // 3D tilt effect on the download button
+      // 3D hover: the button lifts toward the viewer, tilts toward the cursor,
+      // sinks slightly, and its highlight follows the pointer.
       var btn = document.getElementById('download-btn');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (btn && !reduce) {
-        // While hovering: button sinks down and drifts toward the cursor,
-        // tilting in 3D toward it. Resets when the mouse leaves.
         btn.addEventListener('mousemove', function (e) {
           var r = btn.getBoundingClientRect();
-          var x = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
-          var y = (e.clientY - r.top) / r.height - 0.5;
-          btn.style.setProperty('--ry', (x * 24).toFixed(2) + 'deg');
-          btn.style.setProperty('--rx', (-y * 24).toFixed(2) + 'deg');
-          btn.style.setProperty('--tx', (x * 14).toFixed(2) + 'px');
-          btn.style.setProperty('--ty', (6 + y * 6).toFixed(2) + 'px');
+          var px = (e.clientX - r.left) / r.width;    // 0 .. 1
+          var py = (e.clientY - r.top) / r.height;    // 0 .. 1
+          var x = px - 0.5;                           // -0.5 .. 0.5
+          var y = py - 0.5;
+
+          btn.style.setProperty('--ry', (x * 22).toFixed(2) + 'deg');
+          btn.style.setProperty('--rx', (-y * 22).toFixed(2) + 'deg');
+          btn.style.setProperty('--tx', (x * 10).toFixed(2) + 'px');
+          btn.style.setProperty('--ty', (6 + y * 4).toFixed(2) + 'px');
+          btn.style.setProperty('--lift', '28px');
+          btn.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+          btn.style.setProperty('--my', (py * 100).toFixed(1) + '%');
         });
+
         btn.addEventListener('mouseleave', function () {
           btn.style.setProperty('--rx', '0deg');
           btn.style.setProperty('--ry', '0deg');
           btn.style.setProperty('--tx', '0px');
           btn.style.setProperty('--ty', '0px');
+          btn.style.setProperty('--lift', '0px');
+          btn.style.setProperty('--mx', '50%');
+          btn.style.setProperty('--my', '50%');
         });
       }
     })();
