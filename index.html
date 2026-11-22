@@ -252,11 +252,11 @@
       position: absolute;
       left: 0;
       top: 50%;
-      width: 320px;
-      height: 220px;
-      margin-top: -110px;
+      width: 380px;
+      height: 260px;
+      margin-top: -130px;
       transform-style: preserve-3d;
-      transform: translateX(-340px);
+      transform: translateX(-420px);
     }
 
     .rat-overlay.active .rat {
@@ -264,342 +264,70 @@
     }
 
     .rat-inner {
-      position: absolute;
-      inset: 0;
-      transform-style: preserve-3d;
+      width: 100%;
+      height: 100%;
     }
 
     .rat-overlay.active .rat-inner {
       animation: bob 0.4s ease-in-out infinite alternate;
     }
 
-    .rat div {
-      position: absolute;
+    .rat svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
     }
 
-    /* Body */
-    .rat .body {
-      left: 70px; top: 62px;
-      width: 160px; height: 94px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at 40% 25%, #dfe3ea 0%, #8a909c 42%, #4b505c 86%);
-      box-shadow: inset -14px -16px 26px rgba(0, 0, 0, 0.45),
-                  inset 8px 8px 14px rgba(255, 255, 255, 0.12);
+    /* Walk cycle: near legs and far legs are half a cycle apart */
+    .rat-overlay.active .leg {
+      animation: legA 0.4s ease-in-out infinite alternate;
     }
 
-    .rat .body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background:
-        repeating-linear-gradient(112deg, rgba(255, 255, 255, 0.09) 0 1.5px, transparent 1.5px 6px),
-        repeating-linear-gradient(68deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 9px);
+    .rat-overlay.active .shin {
+      animation: shinA 0.4s ease-in-out infinite alternate;
     }
 
-    .rat .spine {
-      left: 20px; top: 10px;
-      width: 130px; height: 12px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.24);
-      filter: blur(2px);
+    .rat-overlay.active .p1 {
+      animation-delay: -0.4s;
     }
 
-    .rat .belly {
-      left: 40px; top: 56px;
-      width: 100px; height: 26px;
-      border-radius: 50%;
-      background: linear-gradient(#f0f2f6, #aab0bb);
-      opacity: 0.65;
-    }
-
-    .rat .haunch {
-      left: 14px; top: 22px;
-      width: 76px; height: 70px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 60% 40%, #6d7480, #343843 70%);
-      box-shadow: inset -6px -6px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.15);
-    }
-
-    .rat .shoulder {
-      left: 104px; top: 18px;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.25), transparent 65%);
-    }
-
-    /* Tail: nested segments so each one bends from the one before it */
-    .rat .tail {
-      left: 62px; top: 118px;
-      width: 18px; height: 7px;
-      border-radius: 4px;
-      background: repeating-linear-gradient(90deg, #c98ea0 0 7px, #9d6a79 7px 10px);
-      transform-origin: 100% 50%;
-      transform: rotate(-22deg) translateZ(-8px);
-    }
-
-    .rat .seg {
-      left: -15px; top: 0;
-      height: 7px;
-      border-radius: 4px;
-      background: repeating-linear-gradient(90deg, #c98ea0 0 7px, #9d6a79 7px 10px);
-      transform-origin: 100% 50%;
-    }
-
-    .rat .s1 { width: 16px; }
-    .rat .s2 { width: 14px; }
-    .rat .s3 { width: 12px; }
-    .rat .s4 { width: 10px; }
-    .rat .s5 { width: 8px; }
-    .rat .s6 { width: 6px; }
-
-    .rat-overlay.active .tail,
-    .rat-overlay.active .seg {
+    .rat-overlay.active .tail {
       animation: tailWave 0.45s ease-in-out infinite alternate;
-    }
-
-    .rat-overlay.active .s1 { animation-delay: -0.08s; }
-    .rat-overlay.active .s2 { animation-delay: -0.16s; }
-    .rat-overlay.active .s3 { animation-delay: -0.24s; }
-    .rat-overlay.active .s4 { animation-delay: -0.32s; }
-    .rat-overlay.active .s5 { animation-delay: -0.40s; }
-    .rat-overlay.active .s6 { animation-delay: -0.48s; }
-
-    /* Head */
-    .rat .head {
-      left: 196px; top: 34px;
-      width: 84px; height: 76px;
-      border-radius: 50% 50% 46% 46%;
-      background: radial-gradient(circle at 36% 30%, #e2e5ec, #6c7280 68%, #3f4450 100%);
-      box-shadow: inset -8px -8px 16px rgba(0, 0, 0, 0.4);
-      transform: translateZ(14px);
-    }
-
-    .rat .head::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.07) 0 1.5px, transparent 1.5px 6px);
-    }
-
-    .rat .cheek {
-      left: 40px; top: 38px;
-      width: 40px; height: 30px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 40% 40%, #f2f4f8, #b8bec9);
-      opacity: 0.6;
-    }
-
-    .rat .brow {
-      left: 36px; top: 16px;
-      width: 38px; height: 6px;
-      border-radius: 3px;
-      background: #2f333c;
-      transform: rotate(-8deg);
-      opacity: 0.6;
-    }
-
-    /* Ears */
-    .rat .ear-back {
-      left: 220px; top: 14px;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: #7d8390;
-      transform: translateZ(6px);
-    }
-
-    .rat .ear {
-      left: 236px; top: 18px;
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      background: #e8a3b3;
-      box-shadow: inset -3px -3px 6px rgba(0, 0, 0, 0.15);
-      transform: translateZ(12px);
-    }
-
-    .rat .inner-ear {
-      left: 6px; top: 6px;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 40% 40%, #fbd3dc, #d98aa0);
-    }
-
-    /* Snout, nose, teeth */
-    .rat .snout {
-      left: 252px; top: 70px;
-      width: 60px; height: 30px;
-      border-radius: 50% 30% 30% 50% / 50% 40% 40% 50%;
-      background: linear-gradient(#a5abb7, #6c7280);
-      box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.2);
-      transform: translateZ(18px);
-    }
-
-    .rat .nose {
-      left: 300px; top: 72px;
-      width: 13px; height: 12px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #ffb3c6, #c24d6e);
-      transform: translateZ(26px);
-    }
-
-    .rat .nose::after {
-      content: "";
-      position: absolute;
-      left: 3px; top: 2px;
-      width: 4px; height: 3px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.8);
-    }
-
-    .rat .tooth {
-      left: 284px; top: 96px;
-      width: 9px; height: 14px;
-      border-radius: 0 0 4px 4px;
-      background: linear-gradient(#fff6c8, #e0cf7e);
-      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
-      transform: translateZ(20px);
-    }
-
-    /* Eye with highlight and blink lid */
-    .rat .eye {
-      left: 242px; top: 54px;
-      width: 13px; height: 13px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, #3a2f2f, #0a0708 70%);
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
-      transform: translateZ(22px);
-      overflow: hidden;
-    }
-
-    .rat .eye::after {
-      content: "";
-      position: absolute;
-      left: 3px; top: 3px;
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: #ffffff;
-    }
-
-    .rat .lid {
-      left: 0; top: 0;
-      width: 13px; height: 13px;
-      background: linear-gradient(#5b6170, #343a46);
-      transform-origin: 50% 0;
-      transform: scaleY(0);
     }
 
     .rat-overlay.active .lid {
       animation: blink 3.2s infinite;
     }
 
-    /* Whiskers */
-    .rat .whisker {
-      left: 300px;
-      width: 56px; height: 1.4px;
-      background: rgba(235, 240, 250, 0.8);
-      transform-origin: 0 50%;
-    }
-
-    .rat .w1 { top: 72px; transform: translateZ(28px) rotate(-16deg); }
-    .rat .w2 { top: 76px; transform: translateZ(28px) rotate(-4deg); }
-    .rat .w3 { top: 80px; transform: translateZ(28px) rotate(8deg); }
-    .rat .w4 { top: 84px; transform: translateZ(28px) rotate(18deg); }
-
-    /* Legs: thigh (.leg) with a shin (.shin) and paw; far legs sit behind */
-    .rat .leg {
-      top: 136px;
-      width: 18px; height: 40px;
-      border-radius: 9px;
-      background: linear-gradient(90deg, #666d7b, #3a404c);
-      transform-origin: 50% 0;
-    }
-
-    .rat .shin {
-      left: 1px; top: 34px;
-      width: 16px; height: 36px;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #5d6472, #343945);
-      transform-origin: 50% 0;
-    }
-
-    .rat .paw {
-      left: -3px; top: 32px;
-      width: 24px; height: 10px;
-      border-radius: 6px;
-      background: #8a909c;
-      box-shadow: inset -8px 0 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .rat .paw::after {
-      content: "";
-      position: absolute;
-      left: 20px; top: 2px;
-      width: 4px; height: 3px;
-      border-radius: 2px;
-      background: #e9e4d6;
-    }
-
-    .rat .l1 { left: 100px; }
-    .rat .l2 { left: 200px; }
-    .rat .l3 { left: 112px; transform: translateZ(-10px); background: linear-gradient(90deg, #4c5260, #2a2f3a); }
-    .rat .l4 { left: 212px; transform: translateZ(-10px); background: linear-gradient(90deg, #4c5260, #2a2f3a); }
-
-    .rat-overlay.active .leg {
-      animation: legSwing 0.4s ease-in-out infinite alternate;
-    }
-
-    .rat-overlay.active .shin {
-      animation: shinSwing 0.4s ease-in-out infinite alternate;
-    }
-
-    .rat-overlay.active .l2,
-    .rat-overlay.active .l4 {
-      animation-delay: -0.4s;
-    }
-
-    .rat-overlay.active .l2 .shin,
-    .rat-overlay.active .l4 .shin {
-      animation-delay: -0.4s;
-    }
-
-    .rat .rat-shadow {
-      left: 60px; top: 200px;
-      width: 210px; height: 16px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.55);
-      filter: blur(5px);
-      transform: translateZ(-12px);
-    }
-
     @keyframes ratWalk {
-      from { transform: translateX(-340px) rotateY(16deg); }
-      to   { transform: translateX(calc(100vw + 340px)) rotateY(-16deg); }
+      from { transform: translateX(-420px) rotateY(12deg); }
+      to   { transform: translateX(calc(100vw + 420px)) rotateY(-12deg); }
     }
 
     @keyframes bob {
-      from { transform: translateY(0) rotateX(6deg); }
-      to   { transform: translateY(-8px) rotateX(-4deg); }
+      from { transform: translateY(0) rotateX(5deg); }
+      to   { transform: translateY(-7px) rotateX(-3deg); }
     }
 
-    @keyframes legSwing {
+    @keyframes legA {
       from { transform: rotate(-24deg); }
       to   { transform: rotate(24deg); }
     }
 
-    @keyframes shinSwing {
-      from { transform: rotate(14deg); }
+    @keyframes shinA {
+      from { transform: rotate(16deg); }
       to   { transform: rotate(-18deg); }
     }
 
     @keyframes tailWave {
-      from { transform: rotate(-8deg); }
-      to   { transform: rotate(8deg); }
+      from { transform: rotate(-7deg); }
+      to   { transform: rotate(9deg); }
     }
 
     @keyframes blink {
-      0%, 94%, 100% { transform: scaleY(0); }
-      97%           { transform: scaleY(1); }
+      0%, 93%, 100% { transform: scaleY(0); }
+      96%           { transform: scaleY(1); }
     }
 
     @keyframes popIn {
@@ -653,40 +381,144 @@
   <div id="rat-overlay" class="rat-overlay" aria-hidden="true">
     <div class="rat">
       <div class="rat-inner">
-        <div class="rat-shadow"></div>
+        <svg viewBox="0 0 380 260" aria-hidden="true">
+          <defs>
+            <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#e6eaf1"/>
+              <stop offset="0.5" stop-color="#8a909c"/>
+              <stop offset="1" stop-color="#3b414d"/>
+            </linearGradient>
+            <radialGradient id="gHead" cx="0.35" cy="0.3" r="0.8">
+              <stop offset="0" stop-color="#eef1f6"/>
+              <stop offset="0.55" stop-color="#7a808c"/>
+              <stop offset="1" stop-color="#3b414d"/>
+            </radialGradient>
+            <linearGradient id="gLeg" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#7b8290"/>
+              <stop offset="1" stop-color="#3a404c"/>
+            </linearGradient>
+            <linearGradient id="gLegFar" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#4c5260"/>
+              <stop offset="1" stop-color="#262a34"/>
+            </linearGradient>
+            <linearGradient id="gTail" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#e3a7b5"/>
+              <stop offset="1" stop-color="#8f5e6d"/>
+            </linearGradient>
+            <radialGradient id="gEar" cx="0.5" cy="0.4" r="0.7">
+              <stop offset="0" stop-color="#f3c0cb"/>
+              <stop offset="1" stop-color="#c98297"/>
+            </radialGradient>
+            <radialGradient id="gNose" cx="0.35" cy="0.35" r="0.7">
+              <stop offset="0" stop-color="#ffc7d4"/>
+              <stop offset="1" stop-color="#b4456b"/>
+            </radialGradient>
+            <linearGradient id="gSnout" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#c5cbd6"/>
+              <stop offset="1" stop-color="#6c7280"/>
+            </linearGradient>
+            <radialGradient id="gEye" cx="0.4" cy="0.35" r="0.7">
+              <stop offset="0" stop-color="#4a3f40"/>
+              <stop offset="1" stop-color="#050506"/>
+            </radialGradient>
+            <pattern id="fur" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(28)">
+              <path d="M1 6 Q2 3 2.6 0.5" stroke="rgba(255,255,255,0.22)" stroke-width="0.9" fill="none"/>
+              <path d="M4.6 7 Q5.4 4 5.9 1.5" stroke="rgba(0,0,0,0.15)" stroke-width="0.8" fill="none"/>
+            </pattern>
+            <clipPath id="eyeClip"><circle cx="254" cy="102" r="5.6"/></clipPath>
+            <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4"/>
+            </filter>
+          </defs>
 
-        <div class="tail"><div class="seg s1"><div class="seg s2"><div class="seg s3"><div class="seg s4"><div class="seg s5"><div class="seg s6"></div></div></div></div></div></div></div>
+          <!-- ground shadow -->
+          <ellipse cx="190" cy="236" rx="120" ry="9" fill="#000" opacity="0.55" filter="url(#soft)"/>
 
-        <div class="leg l3"><div class="shin"><div class="paw"></div></div></div>
-        <div class="leg l4"><div class="shin"><div class="paw"></div></div></div>
+          <!-- tail: a curved stroke with ring pattern on top, waving from its base -->
+          <g class="tail" style="transform-origin: 80px 150px;">
+            <path d="M80 150 C44 160 22 140 16 110 C10 86 18 70 8 52" fill="none" stroke="url(#gTail)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M80 150 C44 160 22 140 16 110 C10 86 18 70 8 52" fill="none" stroke="#6e4452" stroke-width="7" stroke-dasharray="3 4" opacity="0.55"/>
+            <path d="M80 150 C44 160 22 140 16 110 C10 86 18 70 8 52" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" stroke-linecap="round" transform="translate(0,-1.5)"/>
+          </g>
 
-        <div class="body">
-          <div class="spine"></div>
-          <div class="belly"></div>
-          <div class="haunch"></div>
-          <div class="shoulder"></div>
-        </div>
+          <!-- far legs (behind the body) -->
+          <g class="leg p1" style="transform-origin: 142px 164px;">
+            <path d="M142 164 L136 200" stroke="url(#gLegFar)" stroke-width="13" stroke-linecap="round"/>
+            <g class="shin" style="transform-origin: 136px 200px;">
+              <path d="M136 200 L140 222" stroke="url(#gLegFar)" stroke-width="10" stroke-linecap="round"/>
+              <ellipse cx="145" cy="224" rx="8" ry="4" fill="#5d6472"/>
+            </g>
+          </g>
+          <g class="leg" style="transform-origin: 232px 162px;">
+            <path d="M232 162 L228 198" stroke="url(#gLegFar)" stroke-width="13" stroke-linecap="round"/>
+            <g class="shin" style="transform-origin: 228px 198px;">
+              <path d="M228 198 L234 222" stroke="url(#gLegFar)" stroke-width="10" stroke-linecap="round"/>
+              <ellipse cx="237" cy="224" rx="8" ry="4" fill="#5d6472"/>
+            </g>
+          </g>
 
-        <div class="leg l1"><div class="shin"><div class="paw"></div></div></div>
-        <div class="leg l2"><div class="shin"><div class="paw"></div></div></div>
+          <!-- body -->
+          <ellipse cx="170" cy="136" rx="84" ry="44" fill="url(#gBody)"/>
+          <ellipse cx="170" cy="136" rx="84" ry="44" fill="url(#fur)" opacity="0.7"/>
+          <ellipse cx="128" cy="140" rx="40" ry="38" fill="rgba(30,34,44,0.38)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <ellipse cx="128" cy="140" rx="40" ry="38" fill="url(#fur)" opacity="0.5"/>
+          <ellipse cx="222" cy="126" rx="24" ry="22" fill="rgba(255,255,255,0.12)"/>
+          <ellipse cx="172" cy="170" rx="66" ry="14" fill="#d4d9e2" opacity="0.55"/>
+          <ellipse cx="160" cy="96" rx="62" ry="6" fill="#ffffff" opacity="0.22" filter="url(#soft)"/>
 
-        <div class="ear-back"></div>
-        <div class="ear"><div class="inner-ear"></div></div>
+          <!-- near back leg -->
+          <g class="leg p1" style="transform-origin: 122px 166px;">
+            <path d="M122 166 L112 202" stroke="url(#gLeg)" stroke-width="15" stroke-linecap="round"/>
+            <g class="shin" style="transform-origin: 112px 202px;">
+              <path d="M112 202 L118 224" stroke="url(#gLeg)" stroke-width="12" stroke-linecap="round"/>
+              <ellipse cx="124" cy="227" rx="9" ry="4.5" fill="#8f96a3"/>
+              <path d="M125 227 l1 3 M122 227 l0 3 M119 227 l-1 3" stroke="#e9e4d6" stroke-width="1" stroke-linecap="round"/>
+            </g>
+          </g>
 
-        <div class="head">
-          <div class="cheek"></div>
-          <div class="brow"></div>
-        </div>
+          <!-- head -->
+          <ellipse cx="252" cy="110" rx="36" ry="33" fill="url(#gHead)"/>
+          <ellipse cx="252" cy="110" rx="36" ry="33" fill="url(#fur)" opacity="0.6"/>
+          <ellipse cx="262" cy="124" rx="18" ry="12" fill="#e9ecf2" opacity="0.5"/>
+          <path d="M236 92 Q248 86 262 92" stroke="#2c3038" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
 
-        <div class="snout"></div>
-        <div class="nose"></div>
-        <div class="tooth"></div>
-        <div class="eye"><div class="lid"></div></div>
+          <!-- ears -->
+          <ellipse cx="236" cy="78" rx="13" ry="14" fill="#6f7685"/>
+          <ellipse cx="248" cy="80" rx="13" ry="14" fill="url(#gEar)" stroke="#7d8390" stroke-width="1.5"/>
+          <ellipse cx="249" cy="81" rx="8" ry="9" fill="#fbd3dc" opacity="0.85"/>
+          <path d="M249 74 Q247 80 249 88" stroke="rgba(190,100,120,0.45)" stroke-width="0.8" fill="none"/>
 
-        <div class="whisker w1"></div>
-        <div class="whisker w2"></div>
-        <div class="whisker w3"></div>
-        <div class="whisker w4"></div>
+          <!-- snout, nose, mouth, teeth -->
+          <path d="M270 110 Q296 108 308 120 Q306 128 292 130 Q276 132 268 128 Z" fill="url(#gSnout)"/>
+          <path d="M290 130 Q298 132 304 127" stroke="#3a3f4b" stroke-width="1" fill="none"/>
+          <path d="M292 130 L293.5 141 L296.5 130 Z" fill="#fff3c4" stroke="#b9a660" stroke-width="0.6"/>
+          <ellipse cx="306" cy="119" rx="5.5" ry="4.8" fill="url(#gNose)"/>
+          <circle cx="304" cy="117" r="1.4" fill="#ffffff" opacity="0.8"/>
+
+          <!-- whiskers -->
+          <g stroke="rgba(235,240,250,0.85)" stroke-width="0.9" stroke-linecap="round" fill="none">
+            <path d="M304 119 Q330 108 360 102"/>
+            <path d="M305 121 Q332 118 362 116"/>
+            <path d="M305 123 Q332 128 360 132"/>
+            <path d="M303 125 Q328 138 352 150"/>
+          </g>
+
+          <!-- eye with highlight, rim and blink lid -->
+          <circle cx="254" cy="102" r="5.6" fill="url(#gEye)"/>
+          <circle cx="252.2" cy="100.2" r="1.6" fill="#ffffff"/>
+          <circle cx="254" cy="102" r="6.4" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1"/>
+          <rect class="lid" x="246" y="95" width="16" height="13" fill="#5b6170" clip-path="url(#eyeClip)" style="transform-origin: 254px 95px;"/>
+
+          <!-- near front leg (in front of body) -->
+          <g class="leg" style="transform-origin: 206px 166px;">
+            <path d="M206 166 L204 200" stroke="url(#gLeg)" stroke-width="15" stroke-linecap="round"/>
+            <g class="shin" style="transform-origin: 204px 200px;">
+              <path d="M204 200 L212 224" stroke="url(#gLeg)" stroke-width="12" stroke-linecap="round"/>
+              <ellipse cx="218" cy="227" rx="9" ry="4.5" fill="#8f96a3"/>
+              <path d="M219 227 l1 3 M216 227 l0 3 M213 227 l-1 3" stroke="#e9e4d6" stroke-width="1" stroke-linecap="round"/>
+            </g>
+          </g>
+        </svg>
       </div>
     </div>
   </div>
