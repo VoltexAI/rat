@@ -52,7 +52,7 @@
       background-size: 28px 28px;
       mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
       -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
-      animation: gridMove 40s linear infinite;
+      animation: gridMove 12s linear infinite;
     }
 
     .bg::after {
@@ -249,9 +249,10 @@
       66%      { transform: translate(-40px, 50px) scale(0.94); }
     }
 
+    /* Moves exactly one tile (28px) diagonally so the loop is seamless */
     @keyframes gridMove {
       from { background-position: 0 0; }
-      to   { background-position: 0 48px; }
+      to   { background-position: 28px 28px; }
     }
 
     @media (max-width: 480px) {
