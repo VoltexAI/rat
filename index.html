@@ -89,7 +89,7 @@
       position: relative;
       text-align: center;
       padding: 60px 64px;
-      max-width: 540px;
+      max-width: 470px;
       width: 100%;
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -166,8 +166,8 @@
     /* Front face: the part you see and click */
     .download-btn .face {
       position: relative;
-      width: 400px;
-      padding: 36px 52px;
+      width: 320px;
+      padding: 28px 44px;
       border-radius: inherit;
       display: flex;
       align-items: center;
@@ -323,8 +323,8 @@
       // Scale the 1200x800 stage to fit the browser window
       var stage = document.getElementById('stage');
       function fit() {
-        var s = Math.min(window.innerWidth / 1600, window.innerHeight / 1000) * 0.94;
-        s = Math.max(0.3, Math.min(s, 1.6));
+        var s = Math.min(window.innerWidth / 1800, window.innerHeight / 1100) * 0.94;
+        s = Math.max(0.5, Math.min(s, 1.6));
         stage.style.setProperty('--s', s.toFixed(4));
       }
       fit();
@@ -415,8 +415,8 @@
   </script>
 
   <script type="module">
-    // Physics-driven 3D rat: drops from the top of the screen, gets pushed by wind,
-    // bounces and tumbles, then lands at the bottom of the screen.
+    // Physics-driven 3D rat: drops from above the top of the screen, is pushed by wind,
+    // tumbles freely in the air, bounces off the bottom of the screen and settles upright.
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -437,35 +437,52 @@
     fill.position.set(-4, 2, -3);
     scene.add(fill);
 
-    var pivot = new THREE.Group();   // position and tilt of the rat in the physics sim
+    var pivot = new THREE.Group();   // the rat's position and tilt in the physics sim
     scene.add(pivot);
 
     var rat = null;
-    var maxDim = 1;
+    var modelSize = new THREE.Vector3(1, 1, 1);
     var center = new THREE.Vector3();
-    var halfH = 1, halfW = 1, R = 0.5, restY = 0;   // screen extents and rat radius (world units)
+    var halfH = 1, halfW = 1;        // visible half-extents of the screen (world units)
+    var halfX = 0.5, halfY = 0.5;    // rat half-extents after scaling
+    var floorY = 0;                  // world y of the bottom edge of the screen
 
     // Physics state
     var S = { x: 0, y: 0, vx: 0, vy: 0, th: 0, w: 0, t: 0 };
     var running = false, pendingDrop = false, last = 0;
 
+    // Lowest point of the rat below its centre for a tilt of th (a box approximation)
+    function bottomOffset(th) {
+      return halfY * Math.abs(Math.cos(th)) + halfX * Math.abs(Math.sin(th));
+    }
+
+    function wrapAngle(a) {
+      return Math.atan2(Math.sin(a), Math.cos(a));
+    }
+
     function metrics() {
       halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
       halfW = halfH * camera.aspect;
+      floorY = -halfH * 0.96;          // bottom edge of the screen
       if (rat) {
         // Rat length: about 45% of the width, at most 35% of the height
         var L = Math.min(halfW * 2 * 0.45, halfH * 2 * 0.35);
-        var s = L / maxDim;
+        var longest = Math.max(modelSize.x, modelSize.y, modelSize.z);
+        var s = L / longest;
         rat.scale.setScalar(s);
         rat.position.copy(center).multiplyScalar(-s);
-        R = maxDim * s * 0.5;
+        halfX = modelSize.x * s / 2;
+        halfY = modelSize.y * s / 2;
       }
-      restY = -halfH * 0.92 + R;   // rat center when resting on the bottom of the screen
     }
 
     function place() {
       pivot.position.set(S.x, S.y, 0);
       pivot.rotation.z = S.th;
+    }
+
+    function restCenterY() {
+      return floorY + halfY;   // centre height when standing upright on the floor
     }
 
     function layout() {
@@ -476,7 +493,7 @@
       camera.updateProjectionMatrix();
       metrics();
       if (!running) {
-        S.x = 0; S.y = restY; S.th = 0; S.vx = 0; S.vy = 0; S.w = 0;
+        S.x = 0; S.y = restCenterY(); S.th = 0; S.vx = 0; S.vy = 0; S.w = 0;
         place();
       }
       renderer.render(scene, camera);
@@ -484,25 +501,29 @@
 
     function startDrop() {
       metrics();
-      S.x = (Math.random() - 0.5) * halfW * 0.7;
-      S.y = halfH + R + 0.5;            // start just above the top edge
+      S.x = (Math.random() - 0.5) * halfW * 0.6;
+      S.y = halfH + halfY + 0.4;       // start fully above the top edge
       S.vx = (Math.random() - 0.5) * 0.4;
       S.vy = 0;
-      S.th = (Math.random() - 0.5) * 0.5;
-      S.w = 0;
+      S.th = (Math.random() - 0.5) * 0.8;
+      S.w = (Math.random() - 0.5) * 0.6;
       S.t = 0;
       running = true;
       last = performance.now();
       requestAnimationFrame(loop);
     }
 
+    function isGrounded() {
+      return S.y - bottomOffset(S.th) <= floorY + 0.0005;
+    }
+
     function step(dt) {
       S.t += dt;
-      var grounded = S.y <= restY + 0.0005;
+      var grounded = isGrounded();
 
       // Wind: gusts that change over time, weaker when the rat is on the ground
       var windX = 0.9 * Math.sin(S.t * 0.9) + 0.5 * Math.sin(S.t * 2.3 + 1.1) + 0.35 * Math.sin(S.t * 5.1 + 0.4);
-      var windF = grounded ? 0.15 : 1;
+      var windF = grounded ? (S.t > 2.5 ? 0 : 0.15) : 1;
 
       // Horizontal: wind push, air drag (or ground friction)
       S.vx += windX * 1.2 * windF * dt;
@@ -510,30 +531,39 @@
 
       // Gravity
       S.vy += -6.5 * dt;
-
       S.x += S.vx * dt;
       S.y += S.vy * dt;
 
-      // Tumble: wind torque, a spring back toward upright, and damping
-      var alpha = windX * 0.9 * windF - 2.4 * S.th - (grounded ? 5 : 0.5) * S.w;
+      // Rotation: free tumble in the air (wind torque, light damping);
+      // on the ground a spring settles the rat back upright
+      var alpha;
+      if (grounded) {
+        alpha = -6 * wrapAngle(S.th) - 4 * S.w;
+      } else {
+        alpha = windX * 1.0 - 0.15 * S.w;
+      }
       S.w += alpha * dt;
-      S.th += S.w * dt;
-      S.th = Math.max(-1.1, Math.min(1.1, S.th));
+      S.th = wrapAngle(S.th + S.w * dt);
+      // Once the rat has landed and the wind has dropped, let it settle upright
+      if (grounded && S.t > 2.5) { S.th *= 1 - 3 * dt; S.w *= 1 - 3 * dt; }
 
       // Side walls
-      var limX = halfW - R * 0.6;
-      if (S.x > limX) { S.x = limX; S.vx = -Math.abs(S.vx) * 0.4; }
-      if (S.x < -limX) { S.x = -limX; S.vx = Math.abs(S.vx) * 0.4; }
+      var limX = halfW - halfX * 0.9;
+      if (S.x > limX) { S.x = limX; S.vx = -Math.abs(S.vx) * 0.4; S.w += -0.4; }
+      if (S.x < -limX) { S.x = -limX; S.vx = Math.abs(S.vx) * 0.4; S.w += 0.4; }
 
-      // Floor: bounce with energy loss, friction, and a little spin
-      if (S.y <= restY) {
-        S.y = restY;
+      // Floor: bounce with energy loss, friction, and spin from the impact
+      var bottom = S.y - bottomOffset(S.th);
+      if (bottom <= floorY) {
+        var impact = Math.abs(S.vy);
+        S.y = floorY + bottomOffset(S.th);
         if (S.vy < 0) {
           S.vy = -S.vy * 0.42;
           if (S.vy < 0.25) S.vy = 0;
+          // Tilted rat rotates back toward upright; sideways speed adds spin
+          S.w += -Math.sin(S.th) * impact * 0.35 + S.vx * 0.25;
         }
         S.vx *= 0.92;
-        S.w += S.vx * 0.12;
       }
     }
 
@@ -544,8 +574,8 @@
       place();
       renderer.render(scene, camera);
 
-      var landed = S.t > 3.2 && S.y <= restY + 0.0005;
-      if (landed || S.t > 6) {
+      var settled = S.t > 3.0 && isGrounded() && Math.abs(S.w) < 0.05 && Math.abs(S.vx) < 0.05 && Math.abs(wrapAngle(S.th)) < 0.05;
+      if (settled || S.t > 7) {
         running = false;   // rat stays at rest on the bottom of the screen
       } else {
         requestAnimationFrame(loop);
@@ -561,9 +591,8 @@
     new GLTFLoader().load('rat/street_rat_1k.gltf', function (gltf) {
       rat = gltf.scene;
       var box = new THREE.Box3().setFromObject(rat);
-      var size = box.getSize(new THREE.Vector3());
+      box.getSize(modelSize);
       box.getCenter(center);
-      maxDim = Math.max(size.x, size.y, size.z) || 1;
       pivot.add(rat);
       layout();
       if (pendingDrop) { pendingDrop = false; startDrop(); }

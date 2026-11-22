@@ -80,7 +80,7 @@
       position: relative;
       text-align: center;
       padding: 60px 64px;
-      max-width: 540px;
+      max-width: 470px;
       width: 100%;
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -163,8 +163,8 @@
     /* Front face: the part you see and click */
     .back-btn .face {
       position: relative;
-      width: 400px;
-      padding: 36px 52px;
+      width: 320px;
+      padding: 28px 44px;
       border-radius: inherit;
       display: flex;
       align-items: center;
@@ -292,8 +292,8 @@
       // Scale the 1200x800 stage to fit the browser window
       var stage = document.getElementById('stage');
       function fit() {
-        var s = Math.min(window.innerWidth / 1600, window.innerHeight / 1000) * 0.94;
-        s = Math.max(0.3, Math.min(s, 1.6));
+        var s = Math.min(window.innerWidth / 1800, window.innerHeight / 1100) * 0.94;
+        s = Math.max(0.5, Math.min(s, 1.6));
         stage.style.setProperty('--s', s.toFixed(4));
       }
       fit();
