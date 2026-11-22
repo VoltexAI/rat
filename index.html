@@ -278,8 +278,72 @@
       left: 40px; top: 50px;
       width: 150px; height: 72px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #c3c8d1, #5b616e 72%);
-      box-shadow: inset -8px -10px 18px rgba(0, 0, 0, 0.35);
+      background: radial-gradient(circle at 35% 28%, #d3d8e0, #6a707d 48%, #3f4450 88%);
+      box-shadow: inset -10px -12px 20px rgba(0, 0, 0, 0.45),
+                  inset 6px 6px 12px rgba(255, 255, 255, 0.12);
+    }
+
+    /* Fur texture over the body */
+    .rat .body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 7px);
+    }
+
+    .rat .belly {
+      position: absolute;
+      left: 22px; top: 40px;
+      width: 110px; height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(#eef1f6, #b9bfca);
+      opacity: 0.6;
+    }
+
+    .rat .spine {
+      position: absolute;
+      left: 16px; top: 8px;
+      width: 118px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      filter: blur(2px);
+    }
+
+    .rat .ear-back {
+      left: 176px; top: 6px;
+      background: #7d8390;
+      transform: translateZ(4px);
+    }
+
+    .rat .inner-ear {
+      position: absolute;
+      left: 6px; top: 6px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #f6c9d3;
+    }
+
+    .rat .whisker {
+      position: absolute;
+      left: 246px;
+      width: 52px; height: 1.5px;
+      background: rgba(230, 236, 246, 0.75);
+      transform-origin: 0 50%;
+      transform: translateZ(26px);
+    }
+
+    .rat .w1 { top: 50px; transform: translateZ(26px) rotate(-14deg); }
+    .rat .w2 { top: 55px; transform: translateZ(26px) rotate(-2deg); }
+    .rat .w3 { top: 60px; transform: translateZ(26px) rotate(10deg); }
+
+    .rat .paw {
+      position: absolute;
+      left: -3px; top: 40px;
+      width: 22px; height: 9px;
+      border-radius: 6px;
+      background: #8a909c;
+      box-shadow: inset -6px 0 0 rgba(0, 0, 0, 0.2);
     }
 
     .rat .head {
@@ -323,9 +387,27 @@
       left: 206px; top: 36px;
       width: 9px; height: 9px;
       border-radius: 50%;
-      background: #0b0d12;
+      background: radial-gradient(circle at 40% 35%, #2a2f3a, #05060a);
       box-shadow: 0 0 0 2px #ffffff;
       transform: translateZ(22px);
+    }
+
+    .rat .eye::after {
+      content: "";
+      position: absolute;
+      left: 2px; top: 2px;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: #ffffff;
+    }
+
+    .rat .nose::after {
+      content: "";
+      position: absolute;
+      left: 2px; top: 2px;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: #ffe0e8;
     }
 
     .rat .tail {
@@ -333,7 +415,7 @@
       left: 0; top: 86px;
       width: 80px; height: 5px;
       border-radius: 4px;
-      background: #c98ea0;
+      background: repeating-linear-gradient(90deg, #c98ea0 0 9px, #9d6a79 9px 12px);
       transform-origin: 100% 50%;
       transform: rotate(-20deg) translateZ(-4px);
     }
@@ -347,7 +429,7 @@
       top: 112px;
       width: 14px; height: 46px;
       border-radius: 7px;
-      background: #4a4f5a;
+      background: linear-gradient(90deg, #5b6170, #353a45);
       transform-origin: 50% 0;
     }
 
@@ -455,16 +537,20 @@
     <div class="rat">
       <div class="rat-inner">
         <div class="tail"></div>
-        <div class="body"></div>
+        <div class="body"><div class="spine"></div><div class="belly"></div></div>
         <div class="head"></div>
-        <div class="ear"></div>
+        <div class="ear ear-back"></div>
+        <div class="ear"><div class="inner-ear"></div></div>
         <div class="snout"></div>
         <div class="nose"></div>
         <div class="eye"></div>
-        <div class="leg l1"></div>
-        <div class="leg l2"></div>
-        <div class="leg l3"></div>
-        <div class="leg l4"></div>
+        <div class="whisker w1"></div>
+        <div class="whisker w2"></div>
+        <div class="whisker w3"></div>
+        <div class="leg l1"><div class="paw"></div></div>
+        <div class="leg l2"><div class="paw"></div></div>
+        <div class="leg l3"><div class="paw"></div></div>
+        <div class="leg l4"><div class="paw"></div></div>
         <div class="rat-shadow"></div>
       </div>
     </div>
