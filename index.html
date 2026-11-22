@@ -600,6 +600,10 @@
 
     new GLTFLoader().load('rat/street_rat_1k.gltf', function (gltf) {
       rat = gltf.scene;
+      // The model is longest along Z; turn it so its length runs left to right on screen
+      var raw = new THREE.Box3().setFromObject(rat).getSize(new THREE.Vector3());
+      if (raw.z > raw.x) rat.rotation.y = Math.PI / 2;
+      rat.updateMatrixWorld(true);
       var box = new THREE.Box3().setFromObject(rat);
       box.getSize(modelSize);
       box.getCenter(center);
